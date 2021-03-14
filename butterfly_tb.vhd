@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity Butterfly_tb is
+entity butterfly_tb is
 end;
 
-architecture bench of Butterfly_tb is
+architecture bench of butterfly_tb is
 
     component Butterfly
         generic (
@@ -48,7 +48,7 @@ architecture bench of Butterfly_tb is
 
 begin
 
-    Butterfly_inst : Butterfly
+    UUT : Butterfly
     generic map(
         width => width
     )
