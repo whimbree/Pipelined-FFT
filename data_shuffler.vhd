@@ -29,7 +29,7 @@ end data_shuffler;
 architecture STR of data_shuffler is
 
     signal dbuff_real, dbuff_img : std_logic_vector(width - 1 downto 0);
-    signal mux_real, mux_out     : std_logic_vector(width - 1 downto 0);
+    signal mux_real, mux_img     : std_logic_vector(width - 1 downto 0);
 
 begin
 

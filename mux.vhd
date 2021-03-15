@@ -19,7 +19,7 @@ entity mux is
 
 end mux;
 
-architecture STR of reg is
+architecture STR of mux is
 begin
 
     output_real <= input_real_1 when mux_select = '1' else

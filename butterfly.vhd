@@ -45,9 +45,6 @@ begin
     add1 : entity work.complex_add
         generic map(width => width)
         port map(
-            clk => clk,
-            rst => rst,
-
             r1_in => dbuffer_out_real,
             i1_in => dbuffer_out_img,
             r2_in => mult_out_real((width * 2) - 1 downto width),
@@ -59,9 +56,6 @@ begin
     add2 : entity work.complex_add
         generic map(width => width)
         port map(
-            clk => clk,
-            rst => rst,
-
             r1_in => dbuffer_out_real,
             i1_in => dbuffer_out_img,
             r2_in => std_logic_vector(resize(-1 * signed(mult_out_real((width * 2) - 1 downto width)), width)),
@@ -86,18 +80,37 @@ end STR_MULT;
 
 architecture STR of butterfly is
 
+    signal reg_0_real, reg_0_img, reg_1_real, reg_1_img : std_logic_vector(width - 1 downto 0);
+
 begin
+
+    reg0 : entity work.reg
+        generic map(width => width)
+        port map(
+            clk         => clk,
+            rst         => rst,
+            input_real  => input_0_real,
+            input_img   => input_0_img,
+            output_real => reg_0_real,
+            output_img  => reg_0_img);
+
+    reg1 : entity work.reg
+        generic map(width => width)
+        port map(
+            clk         => clk,
+            rst         => rst,
+            input_real  => input_1_real,
+            input_img   => input_1_img,
+            output_real => reg_1_real,
+            output_img  => reg_1_img);
 
     add1 : entity work.complex_add
         generic map(width => width)
         port map(
-            clk => clk,
-            rst => rst,
-
-            r1_in => input_0_real,
-            i1_in => input_0_img,
-            r2_in => input_1_real,
-            i2_in => input_1_img,
+            r1_in => reg_0_real,
+            i1_in => reg_0_img,
+            r2_in => reg_1_real,
+            i2_in => reg_1_img,
 
             r_out => output_0_real,
             i_out => output_0_img);
@@ -105,13 +118,10 @@ begin
     add2 : entity work.complex_add
         generic map(width => width)
         port map(
-            clk => clk,
-            rst => rst,
-
-            r1_in => input_0_real,
-            i1_in => input_0_img,
-            r2_in => std_logic_vector(-1 * signed(input_1_real)),
-            i2_in => std_logic_vector(-1 * signed(input_1_img)),
+            r1_in => reg_0_real,
+            i1_in => reg_0_img,
+            r2_in => std_logic_vector(resize(-1 * signed(reg_1_real), width)),
+            i2_in => std_logic_vector(resize(-1 * signed(reg_1_img), width)),
 
             r_out => output_1_real,
             i_out => output_1_img);

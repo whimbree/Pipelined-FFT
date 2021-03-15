@@ -17,8 +17,9 @@ entity complex_mult is
         result_imag : out std_logic_vector((width * 2) - 1 downto 0));
 end complex_mult;
 
-architecture BHV of complex_mult is
+architecture BHV_PIPELINED of complex_mult is
     signal x_r_reg, x_i_reg, y_r_reg, y_i_reg : signed(width - 1 downto 0);
+    signal x_r_reg_d, x_i_reg_d, y_i_reg_d    : signed(width - 1 downto 0);
     signal a1, a2, a3                         : signed(width - 1 downto 0);
     signal p1, p2, p3                         : signed((width * 2) - 1 downto 0);
 begin
@@ -35,16 +36,48 @@ begin
             a1 <= x_r_reg - x_i_reg;
             a2 <= y_r_reg - y_i_reg;
             a3 <= y_r_reg + y_i_reg;
+            -- preserve old registers for use in stage 3
+            x_r_reg_d <= x_r_reg;
+            x_i_reg_d <= x_i_reg;
+            y_i_reg_d <= y_i_reg;
 
             -- stage 3
-            p1 <= a1 * y_i_reg;
-            p2 <= a2 * x_r_reg;
-            p3 <= a3 * x_i_reg;
-
-            -- stage 4
-            result_real <= std_logic_vector(p1 + p2);
-            result_imag <= std_logic_vector(p1 + p3);
+            p1 <= a1 * y_i_reg_d;
+            p2 <= a2 * x_r_reg_d;
+            p3 <= a3 * x_i_reg_d;
         end if;
     end process;
+
+    result_real <= std_logic_vector(p1 + p2);
+    result_imag <= std_logic_vector(p1 + p3);
+
+end BHV_PIPELINED;
+
+architecture BHV of complex_mult is
+    signal x_r_reg, x_i_reg, y_r_reg, y_i_reg : signed(width - 1 downto 0);
+    signal x_r_reg_d, x_i_reg_d, y_i_reg_d    : signed(width - 1 downto 0);
+    signal a1, a2, a3                         : signed(width - 1 downto 0);
+    signal p1, p2, p3                         : signed((width * 2) - 1 downto 0);
+begin
+    process (clock)
+    begin
+        if rising_edge(clock) then
+            x_r_reg <= signed(dataa_real);
+            x_i_reg <= signed(dataa_imag);
+            y_r_reg <= signed(datab_real);
+            y_i_reg <= signed(datab_imag);
+        end if;
+    end process;
+
+    a1 <= x_r_reg - x_i_reg;
+    a2 <= y_r_reg - y_i_reg;
+    a3 <= y_r_reg + y_i_reg;
+
+    p1 <= a1 * y_i_reg;
+    p2 <= a2 * x_r_reg;
+    p3 <= a3 * x_i_reg;
+
+    result_real <= std_logic_vector(p1 + p2);
+    result_imag <= std_logic_vector(p1 + p3);
 
 end BHV;
