@@ -56,8 +56,8 @@ begin
             input_img_0  => input_0_img,
             input_real_1 => dbuff_real,
             input_img_1  => dbuff_img,
-            output_real  => mux_real,
-            output_img   => mux_img);
+            output_real  => output_1_real,
+            output_img   => output_1_img);
 
     -- lower delay buffer        
     delay_buffer_1 : entity work.pipe_reg
@@ -83,6 +83,6 @@ begin
             input_real  => mux_real,
             input_img   => mux_img,
             output_real => output_0_real,
-            output_img  => output_1_real);
+            output_img  => output_0_img);
 
 end STR;
