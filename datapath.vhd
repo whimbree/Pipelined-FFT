@@ -19,14 +19,24 @@ end datapath;
 
 architecture STR of datapath is
 
+    -- Stage 0
     signal b_0_0_out_0_real, b_0_0_out_0_img, b_0_0_out_1_real, b_0_0_out_1_img : std_logic_vector(width - 1 downto 0);
+    signal b_0_0_db_out_0_real, b_0_0_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
+    signal b_0_0_db_out_1_real, b_0_0_db_out_1_img                              : std_logic_vector(width - 1 downto 0);
+
     signal b_1_0_out_0_real, b_1_0_out_0_img, b_1_0_out_1_real, b_1_0_out_1_img : std_logic_vector(width - 1 downto 0);
-    signal b_0_1_out_0_real, b_0_1_out_0_img, b_0_1_out_1_real, b_0_1_out_1_img : std_logic_vector(width - 1 downto 0);
-    signal b_1_1_out_0_real, b_1_1_out_0_img, b_1_1_out_1_real, b_1_1_out_1_img : std_logic_vector(width - 1 downto 0);
+    signal b_1_0_db_out_0_real, b_1_0_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
     signal b_1_0_tm_out_1_real, b_1_0_tm_out_1_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_0_0_db_out_real, b_0_0_db_out_img                                  : std_logic_vector(width - 1 downto 0);
-    signal b_0_1_db_out_real, b_0_1_db_out_img                                  : std_logic_vector(width - 1 downto 0);
-    signal b_1_0_db_out_real, b_1_0_db_out_img                                  : std_logic_vector(width - 1 downto 0);
+
+    -- Stage 1
+    signal b_0_1_out_0_real, b_0_1_out_0_img, b_0_1_out_1_real, b_0_1_out_1_img : std_logic_vector(width - 1 downto 0);
+    signal b_0_1_db_out_0_real, b_0_1_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
+    signal b_0_1_cm_out_1_real, b_0_1_cm_out_1_img                              : std_logic_vector(width - 1 downto 0);
+
+    signal b_1_1_out_0_real, b_1_1_out_0_img, b_1_1_out_1_real, b_1_1_out_1_img : std_logic_vector(width - 1 downto 0);
+    signal b_1_1_cm_out_0_real, b_1_1_cm_out_0_img                              : std_logic_vector(width - 1 downto 0);
+    signal b_1_1_cm_out_1_real, b_1_1_cm_out_1_img                              : std_logic_vector(width - 1 downto 0);
+
 begin
 
     -- butterfly naming convention b_x_y
@@ -97,20 +107,8 @@ begin
             rst         => rst,
             input_real  => b_0_0_out_0_real,
             input_img   => b_0_0_out_0_img,
-            output_real => b_0_0_db_out_real,
-            output_img  => b_0_0_db_out_img);
-
-    db_0_1_0 : entity work.pipe_reg
-        generic map(
-            length => 4,
-            width  => width)
-        port map(
-            clk         => clk,
-            rst         => rst,
-            input_real  => b_0_0_out_1_real,
-            input_img   => b_0_0_out_1_img,
-            output_real => b_0_1_db_out_real,
-            output_img  => b_0_1_db_out_img);
+            output_real => b_0_0_db_out_0_real,
+            output_img  => b_0_0_db_out_0_img);
 
     db_1_0_0 : entity work.pipe_reg
         generic map(
@@ -119,14 +117,25 @@ begin
         port map(
             clk         => clk,
             rst         => rst,
+            input_real  => b_0_0_out_1_real,
+            input_img   => b_0_0_out_1_img,
+            output_real => b_0_0_db_out_1_real,
+            output_img  => b_0_0_db_out_1_img);
+
+    db_0_1_0 : entity work.pipe_reg
+        generic map(
+            length => 4,
+            width  => width)
+        port map(
+            clk         => clk,
+            rst         => rst,
             input_real  => b_1_0_out_0_real,
             input_img   => b_1_0_out_0_img,
-            output_real => b_1_0_db_out_real,
-            output_img  => b_1_0_db_out_img);
+            output_real => b_1_0_db_out_0_real,
+            output_img  => b_1_0_db_out_0_img);
     ------------------------------------------------------------------------------------------------------------
     ---------------------------------------------  STAGE 1  ----------------------------------------------------
     ------------------------------------------------------------------------------------------------------------
-    -- TODO: rewire
     b_0_1 : entity work.butterfly(STR)
         generic map(
             width => width
@@ -138,10 +147,10 @@ begin
             twiddle_real => (others => '0'),
             twiddle_img => (others => '0'),
 
-            input_0_real => b_0_0_out_0_real,
-            input_0_img  => b_0_0_out_0_img,
-            input_1_real => b_1_0_out_0_real,
-            input_1_img  => b_1_0_out_0_real,
+            input_0_real => b_0_0_db_out_0_real,
+            input_0_img  => b_0_0_db_out_0_img,
+            input_1_real => b_1_0_db_out_0_real,
+            input_1_img  => b_1_0_db_out_0_real,
 
             output_0_real => b_0_1_out_0_real,
             output_0_img  => b_0_1_out_0_img,
@@ -159,8 +168,8 @@ begin
             twiddle_real => (others => '0'),
             twiddle_img => (others => '0'),
 
-            input_0_real => b_0_0_out_1_real,
-            input_0_img  => b_0_0_out_1_img,
+            input_0_real => b_0_0_db_out_1_real,
+            input_0_img  => b_0_0_db_out_1_img,
             input_1_real => b_1_0_tm_out_1_real,
             input_1_img  => b_1_0_tm_out_1_img,
 
@@ -168,6 +177,42 @@ begin
             output_0_img  => b_1_1_out_0_img,
             output_1_real => b_1_1_out_1_real,
             output_1_img  => b_1_1_out_1_img);
+
+    cm_0 : entity work.complex_mult(BHV_PIPELINED)
+        generic map(width => width)
+        port map(
+            clock      => clk,
+            dataa_real => b_0_1_out_1_real,
+            dataa_imag => b_0_1_out_1_img,
+            datab_real => (others => '0'),
+            datab_imag => (others => '0'),
+
+            result_real(width - 1 downto 0) => b_0_1_cm_out_1_real,
+            result_imag(width - 1 downto 0) => b_0_1_cm_out_1_img);
+
+    cm_1 : entity work.complex_mult(BHV_PIPELINED)
+        generic map(width => width)
+        port map(
+            clock      => clk,
+            dataa_real => b_1_1_out_0_real,
+            dataa_imag => b_1_1_out_0_img,
+            datab_real => (others => '0'),
+            datab_imag => (others => '0'),
+
+            result_real(width - 1 downto 0) => b_1_1_cm_out_0_real,
+            result_imag(width - 1 downto 0) => b_1_1_cm_out_0_img);
+
+    cm_2 : entity work.complex_mult(BHV_PIPELINED)
+        generic map(width => width)
+        port map(
+            clock      => clk,
+            dataa_real => b_1_1_out_1_real,
+            dataa_imag => b_1_1_out_1_img,
+            datab_real => (others => '0'),
+            datab_imag => (others => '0'),
+
+            result_real(width - 1 downto 0) => b_1_1_cm_out_1_real,
+            result_imag(width - 1 downto 0) => b_1_1_cm_out_1_img);
 
     ------------------------------------------------------------------------------------------------------------
     ---------------------------------------------  STAGE 2  ----------------------------------------------------
