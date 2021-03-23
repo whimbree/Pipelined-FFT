@@ -14,6 +14,8 @@ entity datapath is
 
         tg0_select, tg1_select, tg2_select : in std_logic_vector(1 downto 0);
 
+        ds_0_select, ds_1_select, ds_2_select, ds_3_select : in std_logic;
+
         r0_input, r1_input, r2_input, r3_input     : in std_logic_vector(width - 1 downto 0);
         i0_input, i1_input, i2_input, i3_input     : in std_logic_vector(width - 1 downto 0);
         r0_output, r1_output, r2_output, r3_output : out std_logic_vector(width - 1 downto 0);
@@ -315,7 +317,7 @@ begin
             clk => clk,
             rst => rst,
 
-            mux_select => '0', -- FIXME, need to add proper select signal (from controller)
+            mux_select => ds_0_select,
 
             input_0_real => b_1_0_db_out_0_real,
             input_0_img  => b_1_0_db_out_0_img,
@@ -335,7 +337,7 @@ begin
             clk => clk,
             rst => rst,
 
-            mux_select => '0', -- FIXME, need to add proper select signal (from controller)
+            mux_select => ds_1_select,
 
             input_0_real => b_1_0_cm_out_1_real,
             input_0_img  => b_1_0_cm_out_1_img,
@@ -398,7 +400,7 @@ begin
             clk => clk,
             rst => rst,
 
-            mux_select => '0', -- FIXME, need to add proper select signal (from controller)
+            mux_select => ds_2_select,
 
             input_0_real => b_2_0_out_0_real,
             input_0_img  => b_2_0_out_0_img,
@@ -418,7 +420,7 @@ begin
             clk => clk,
             rst => rst,
 
-            mux_select => '0', -- FIXME, need to add proper select signal (from controller)
+            mux_select => ds_3_select,
 
             input_0_real => b_2_1_out_0_real,
             input_0_img  => b_2_1_out_0_img,

@@ -84,7 +84,7 @@ architecture STR of butterfly is
 
 begin
 
-    reg0 : entity work.reg
+    reg0 : entity work.complex_reg
         generic map(width => width)
         port map(
             clk         => clk,
@@ -94,7 +94,7 @@ begin
             output_real => reg_0_real,
             output_img  => reg_0_img);
 
-    reg1 : entity work.reg
+    reg1 : entity work.complex_reg
         generic map(width => width)
         port map(
             clk         => clk,

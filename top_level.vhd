@@ -10,7 +10,9 @@ entity top_level is
         clk : in std_logic;
         rst : in std_logic;
 
-        tg0_select, tg1_select, tg2_select : in std_logic_vector(1 downto 0);
+        done : out std_logic;
+        go   : in std_logic;
+        size : in std_logic_vector(31 downto 0);
 
         r0_input, r1_input, r2_input, r3_input     : in std_logic_vector(width - 1 downto 0);
         i0_input, i1_input, i2_input, i3_input     : in std_logic_vector(width - 1 downto 0);
@@ -19,13 +21,32 @@ entity top_level is
 
 end top_level;
 
-architecture BHV of top_level is
+architecture STR of top_level is
+    signal cm2_valid, ds2_valid, ds3_valid, output_valid : std_logic;
+    signal theta_select                                  : std_logic_vector(1 downto 0);
+    signal ready                                         : std_logic := '1';
+    signal ds_2_select, ds_3_select                      : std_logic;
+
 begin
 
-    process (clk, rst)
-    begin
+    controller : entity work.controller
+        port map(
+            clk => clk,
+            rst => rst,
 
-    end process;
+            go   => go,
+            size => size,
+            done => done,
+
+            cm_2_valid => cm2_valid,
+            ds_2_valid => ds2_valid,
+            ds_3_valid => ds3_valid,
+            out_valid  => output_valid,
+
+            theta_select_2 => theta_select,
+
+            ds_select_2 => ds_2_select,
+            ds_select_3 => ds_3_select);
 
     datapath : entity work.datapath
         generic map(
@@ -34,9 +55,14 @@ begin
             clk => clk,
             rst => rst,
 
-            tg0_select => tg1_select,
-            tg1_select => tg1_select,
-            tg2_select => tg2_select,
+            tg0_select => theta_select,
+            tg1_select => theta_select,
+            tg2_select => theta_select,
+
+            ds_0_select => ds_2_select,
+            ds_1_select => ds_2_select,
+            ds_2_select => ds_3_select,
+            ds_3_select => ds_3_select,
 
             r0_input => r0_input,
             i0_input => i0_input,
@@ -62,4 +88,15 @@ begin
             r3_output => r3_output,
             i3_output => i3_output);
 
-end BHV;
+    datapath_delay : entity work.datapath_delay
+        port map(
+            clk   => clk,
+            rst   => rst,
+            ready => ready,
+
+            cm2_valid    => cm2_valid,
+            ds2_valid    => ds2_valid,
+            ds3_valid    => ds3_valid,
+            output_valid => output_valid);
+
+end STR;
