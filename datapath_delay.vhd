@@ -7,7 +7,7 @@ entity datapath_delay is
     port (
         clk   : in std_logic;
         rst   : in std_logic;
-        ready : in std_logic;
+        input_valid : in std_logic;
 
         cm2_valid    : out std_logic;
         ds2_valid    : out std_logic;
@@ -25,7 +25,7 @@ begin
         port map(
             clk       => clk,
             rst       => rst,
-            input(0)  => ready,
+            input(0)  => input_valid,
             output(0) => cm2_valid_wire);
 
     ds2_delay : entity work.delay

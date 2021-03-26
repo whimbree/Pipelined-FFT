@@ -13,11 +13,14 @@ entity controller is
         size : in std_logic_vector(31 downto 0);
         done : out std_logic;
 
+		  -- valid signal to datapath delay entity
+		  valid_start : out std_logic;
+		  
         -- valid signals from datapath delay entity
         cm_2_valid : in std_logic;
         ds_2_valid : in std_logic;
         ds_3_valid : in std_logic;
-        out_valid  : in std_logic;
+        valid_end  : in std_logic;
 
         -- only need one theta select per-stage (all CMs within stage are synced up)
         theta_select_2 : out std_logic_vector(1 downto 0);
@@ -54,13 +57,14 @@ begin
         end if;
     end process;
 
-    comb_proc : process (state, go, cm_2_valid, ds_2_valid, ds_3_valid, out_valid, theta_select_count, DS_2_count, DS_3_select_sig, size_reg, size, size_count)
+    comb_proc : process (state, go, cm_2_valid, ds_2_valid, ds_3_valid, valid_end, theta_select_count, DS_2_count, DS_3_select_sig, size_reg, size, size_count)
     begin
 
         next_state         <= state;
         next_size_reg      <= size_reg;
         next_size_count    <= size_count;
         done               <= '0';
+		  valid_start  		<= '0';
         theta_select_count <= "00";
         DS_2_count         <= "00";
         DS_3_select_sig    <= '0';
@@ -72,11 +76,13 @@ begin
                     next_size_reg <= size;
                 end if;
             when PRE =>
+					 valid_start <= '1';
                 next_size_count <= size_count + 1;
                 if cm_2_valid = '1' then
                     next_state <= CM;
                 end if;
             when CM =>
+					 valid_start <= '1';
                 next_size_count <= size_count + 1;
                 -- should the below be here or in the next stage?
                 -- also I think this should properly overflow from 3 to 0 as desired, but not certain...
@@ -85,6 +91,7 @@ begin
                     next_state <= DS_0;
                 end if;
             when DS_0 =>
+					 valid_start <= '1';
                 next_size_count    <= size_count + 1;
                 theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
                 DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
@@ -92,14 +99,16 @@ begin
                     next_state <= DS_0;
                 end if;
             when DS_1 =>
+					 valid_start <= '1';
                 next_size_count    <= size_count + 1;
                 theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
                 DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
                 DS_3_select_sig    <= not(DS_3_select_sig);
-                if out_valid = '1' then
+                if valid_end = '1' then
                     next_state <= MAIN;
                 end if;
             when MAIN =>
+					 valid_start <= '1';
                 next_size_count    <= size_count + 1;
                 theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
                 DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
@@ -111,12 +120,12 @@ begin
                 theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
                 DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
                 DS_3_select_sig    <= not(DS_3_select_sig);
-                if out_valid = '0' then
+                if valid_end = '0' then
                     next_state <= FIN;
                 end if;
             when FIN =>
                 done <= '1';
-                if go = '1' then
+                if go = '0' then -- should check for go = 0 to make sure it has been cleared and then set again
                     next_state <= INIT;
                 end if;
             when others => null;
