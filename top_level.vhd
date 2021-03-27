@@ -24,7 +24,7 @@ end top_level;
 architecture STR of top_level is
     signal cm2_valid, ds2_valid, ds3_valid, output_valid : std_logic;
     signal theta_select                                  : std_logic_vector(1 downto 0);
-    signal ready                                         : std_logic := '1';
+    signal valid_start                                   : std_logic := '1';
     signal ds_2_select, ds_3_select                      : std_logic;
 
 begin
@@ -38,10 +38,12 @@ begin
             size => size,
             done => done,
 
+				valid_start => valid_start,
+				
             cm_2_valid => cm2_valid,
             ds_2_valid => ds2_valid,
             ds_3_valid => ds3_valid,
-            out_valid  => output_valid,
+            valid_end  => output_valid,
 
             theta_select_2 => theta_select,
 
@@ -92,7 +94,7 @@ begin
         port map(
             clk   => clk,
             rst   => rst,
-            ready => ready,
+            input_valid => valid_start,
 
             cm2_valid    => cm2_valid,
             ds2_valid    => ds2_valid,
