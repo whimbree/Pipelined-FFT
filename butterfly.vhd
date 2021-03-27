@@ -30,6 +30,8 @@ architecture STR_MULT of butterfly is
     signal mult_out_real, mult_out_img       : std_logic_vector((width * 2) - 1 downto 0);
     signal dbuffer_out_real, dbuffer_out_img : std_logic_vector(width - 1 downto 0);
 
+    signal add2_r2_in, add2_i2_in : std_logic_vector(width - 1 downto 0);
+
 begin
 
     mult : entity work.complex_mult
@@ -53,13 +55,16 @@ begin
             r_out => output_0_real,
             i_out => output_0_img);
 
+    add2_r2_in <= std_logic_vector(resize(-1 * signed(mult_out_real((width * 2) - 1 downto width)), width));
+    add2_i2_in <= std_logic_vector(resize(-1 * signed(mult_out_img((width * 2) - 1 downto width)), width));
+
     add2 : entity work.complex_add
         generic map(width => width)
         port map(
             r1_in => dbuffer_out_real,
             i1_in => dbuffer_out_img,
-            r2_in => std_logic_vector(resize(-1 * signed(mult_out_real((width * 2) - 1 downto width)), width)),
-            i2_in => std_logic_vector(resize(-1 * signed(mult_out_img((width * 2) - 1 downto width)), width)),
+            r2_in => add2_r2_in,
+            i2_in => add2_i2_in,
 
             r_out => output_1_real,
             i_out => output_1_img);
@@ -81,6 +86,8 @@ end STR_MULT;
 architecture STR of butterfly is
 
     signal reg_0_real, reg_0_img, reg_1_real, reg_1_img : std_logic_vector(width - 1 downto 0);
+
+    signal add2_r2_in, add2_i2_in : std_logic_vector(width - 1 downto 0);
 
 begin
 
@@ -115,13 +122,16 @@ begin
             r_out => output_0_real,
             i_out => output_0_img);
 
+    add2_r2_in <= std_logic_vector(resize(-1 * signed(reg_1_real), width));
+    add2_i2_in <= std_logic_vector(resize(-1 * signed(reg_1_img), width));
+
     add2 : entity work.complex_add
         generic map(width => width)
         port map(
             r1_in => reg_0_real,
             i1_in => reg_0_img,
-            r2_in => std_logic_vector(resize(-1 * signed(reg_1_real), width)),
-            i2_in => std_logic_vector(resize(-1 * signed(reg_1_img), width)),
+            r2_in => add2_r2_in,
+            i2_in => add2_i2_in,
 
             r_out => output_1_real,
             i_out => output_1_img);

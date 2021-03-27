@@ -32,23 +32,34 @@ architecture STR of datapath is
 
     signal b_0_1_out_0_real, b_0_1_out_0_img, b_0_1_out_1_real, b_0_1_out_1_img : std_logic_vector(width - 1 downto 0);
     signal b_0_1_db_out_0_real, b_0_1_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_0_1_tm_out_1_real, b_0_1_tm_out_1_img                              : std_logic_vector(width - 1 downto 0);
+    signal b_0_1_tm_out_1_real_2x, b_0_1_tm_out_1_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
+    alias b_0_1_tm_out_1_real is b_0_1_tm_out_1_real_2x((width * 2) - 1 downto width);
+    alias b_0_1_tm_out_1_img is b_0_1_tm_out_1_img_2x((width * 2) - 1 downto width);
 
     -- Stage 1
     signal b_1_0_out_0_real, b_1_0_out_0_img, b_1_0_out_1_real, b_1_0_out_1_img : std_logic_vector(width - 1 downto 0);
     signal b_1_0_db_out_0_real, b_1_0_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_1_0_cm_out_1_real, b_1_0_cm_out_1_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_1_0_ds_out_0_real, b_1_0_ds_out_0_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_1_0_ds_out_1_real, b_1_0_ds_out_1_img                              : std_logic_vector(width - 1 downto 0);
-    signal tg0_real, tg0_imag                                                   : std_logic_vector(DATA_RANGE);
+    signal b_1_0_cm_out_1_real_2x, b_1_0_cm_out_1_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
+    alias b_1_0_cm_out_1_real is b_1_0_cm_out_1_real_2x((width * 2) - 1 downto width);
+    alias b_1_0_cm_out_1_img is b_1_0_cm_out_1_img_2x((width * 2) - 1 downto width);
+
+    signal b_1_0_ds_out_0_real, b_1_0_ds_out_0_img : std_logic_vector(width - 1 downto 0);
+    signal b_1_0_ds_out_1_real, b_1_0_ds_out_1_img : std_logic_vector(width - 1 downto 0);
+    signal tg0_real, tg0_imag                      : std_logic_vector(DATA_RANGE);
 
     signal b_1_1_out_0_real, b_1_1_out_0_img, b_1_1_out_1_real, b_1_1_out_1_img : std_logic_vector(width - 1 downto 0);
-    signal b_1_1_cm_out_0_real, b_1_1_cm_out_0_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_1_1_cm_out_1_real, b_1_1_cm_out_1_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_1_1_ds_out_0_real, b_1_1_ds_out_0_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_1_1_ds_out_1_real, b_1_1_ds_out_1_img                              : std_logic_vector(width - 1 downto 0);
-    signal tg1_real, tg1_imag                                                   : std_logic_vector(DATA_RANGE);
-    signal tg2_real, tg2_imag                                                   : std_logic_vector(DATA_RANGE);
+    signal b_1_1_cm_out_0_real_2x, b_1_1_cm_out_0_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
+    alias b_1_1_cm_out_0_real is b_1_1_cm_out_0_real_2x((width * 2) - 1 downto width);
+    alias b_1_1_cm_out_0_img is b_1_1_cm_out_0_img_2x((width * 2) - 1 downto width);
+
+    signal b_1_1_cm_out_1_real_2x, b_1_1_cm_out_1_img_2x : std_logic_vector((width * 2) - 1 downto 0);
+    alias b_1_1_cm_out_1_real is b_1_1_cm_out_1_real_2x((width * 2) - 1 downto width);
+    alias b_1_1_cm_out_1_img is b_1_1_cm_out_1_img_2x((width * 2) - 1 downto width);
+
+    signal b_1_1_ds_out_0_real, b_1_1_ds_out_0_img : std_logic_vector(width - 1 downto 0);
+    signal b_1_1_ds_out_1_real, b_1_1_ds_out_1_img : std_logic_vector(width - 1 downto 0);
+    signal tg1_real, tg1_imag                      : std_logic_vector(DATA_RANGE);
+    signal tg2_real, tg2_imag                      : std_logic_vector(DATA_RANGE);
 
     -- Stage 2
     signal b_2_0_out_0_real, b_2_0_out_0_img, b_2_0_out_1_real, b_2_0_out_1_img : std_logic_vector(width - 1 downto 0);
@@ -60,8 +71,11 @@ architecture STR of datapath is
     signal b_2_1_out_0_real, b_2_1_out_0_img, b_2_1_out_1_real, b_2_1_out_1_img : std_logic_vector(width - 1 downto 0);
     signal b_2_1_ds_out_0_real, b_2_1_ds_out_0_img                              : std_logic_vector(width - 1 downto 0);
     signal b_2_1_ds_out_1_real, b_2_1_ds_out_1_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_2_1_tm_out_1_real, b_2_1_tm_out_1_img                              : std_logic_vector(width - 1 downto 0);
-    signal b_2_1_db_out_0_real, b_2_1_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
+    signal b_2_1_tm_out_1_real_2x, b_2_1_tm_out_1_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
+    alias b_2_1_tm_out_1_real is b_2_1_tm_out_1_real_2x((width * 2) - 1 downto width);
+    alias b_2_1_tm_out_1_img is b_2_1_tm_out_1_img_2x((width * 2) - 1 downto width);
+
+    signal b_2_1_db_out_0_real, b_2_1_db_out_0_img : std_logic_vector(width - 1 downto 0);
 
     -- Stage 3
     signal b_3_0_out_0_real, b_3_0_out_0_img, b_3_0_out_1_real, b_3_0_out_1_img : std_logic_vector(width - 1 downto 0);
@@ -125,8 +139,8 @@ begin
             datab_real => REAL_4,
             datab_imag => IMAG_4,
 
-            result_real(width * 2 - 1 downto width)   => b_0_1_tm_out_1_real,
-            result_imag((width * 2) - 1 downto width) => b_0_1_tm_out_1_img);
+            result_real => b_0_1_tm_out_1_real_2x,
+            result_imag => b_0_1_tm_out_1_img_2x);
 
     db_0 : entity work.pipe_reg
         generic map(
@@ -234,8 +248,8 @@ begin
             datab_real => tg0_real,
             datab_imag => tg0_imag,
 
-            result_real((width * 2) - 1 downto width) => b_1_0_cm_out_1_real,
-            result_imag((width * 2) - 1 downto width) => b_1_0_cm_out_1_img);
+            result_real => b_1_0_cm_out_1_real_2x,
+            result_imag => b_1_0_cm_out_1_img_2x);
 
     tg_1 : entity work.twiddle_gen
         generic map(
@@ -264,8 +278,8 @@ begin
             datab_real => tg1_real,
             datab_imag => tg1_imag,
 
-            result_real((width * 2) - 1 downto width) => b_1_1_cm_out_0_real,
-            result_imag((width * 2) - 1 downto width) => b_1_1_cm_out_0_img);
+            result_real => b_1_1_cm_out_0_real_2x,
+            result_imag => b_1_1_cm_out_0_img_2x);
 
     tg_2 : entity work.twiddle_gen
         generic map(
@@ -294,8 +308,8 @@ begin
             datab_real => tg2_real,
             datab_imag => tg2_imag,
 
-            result_real((width * 2) - 1 downto width) => b_1_1_cm_out_1_real,
-            result_imag((width * 2) - 1 downto width) => b_1_1_cm_out_1_img);
+            result_real => b_1_1_cm_out_1_real_2x,
+            result_imag => b_1_1_cm_out_1_img_2x);
 
     db_3 : entity work.pipe_reg
         generic map(
@@ -441,8 +455,8 @@ begin
             datab_real => REAL_4,
             datab_imag => IMAG_4,
 
-            result_real((width * 2) - 1 downto width) => b_2_1_tm_out_1_real,
-            result_imag((width * 2) - 1 downto width) => b_2_1_tm_out_1_img);
+            result_real => b_2_1_tm_out_1_real_2x,
+            result_imag => b_2_1_tm_out_1_img_2x);
 
     db_4 : entity work.pipe_reg
         generic map(

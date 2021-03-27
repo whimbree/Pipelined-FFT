@@ -30,8 +30,11 @@ architecture STR of data_shuffler is
 
     signal dbuff_real, dbuff_img : std_logic_vector(width - 1 downto 0);
     signal mux_real, mux_img     : std_logic_vector(width - 1 downto 0);
+    signal mux_select_inverted   : std_logic;
 
 begin
+
+    mux_select_inverted <= not(mux_select);
 
     -- upper mux
     mux_1 : entity work.mux
@@ -51,7 +54,7 @@ begin
         generic map(
             width => width)
         port map(
-            mux_select   => not(mux_select),
+            mux_select   => mux_select_inverted,
             input_real_0 => input_0_real,
             input_img_0  => input_0_img,
             input_real_1 => dbuff_real,
