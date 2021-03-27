@@ -45,7 +45,7 @@ begin
             output(0) => ds3_valid_wire);
 
     out_delay : entity work.delay
-        generic map(width => 1, length => 2)
+        generic map(width => 1, length => 6)
         port map(
             clk       => clk,
             rst       => rst,
