@@ -57,14 +57,14 @@ begin
         end if;
     end process;
 
-    comb_proc : process (state, go, cm_2_valid, ds_2_valid, ds_3_valid, valid_end, theta_select_count, DS_2_count, DS_3_select_sig, size_reg, size, size_count)
+    comb_proc : process (state, go, cm_2_valid, ds_2_valid, ds_3_valid, valid_end, size_count) -- removed these: theta_select_count, DS_2_count, DS_3_select_sig, size_reg, size, 
     begin
 
         next_state         <= state;
         next_size_reg      <= size_reg;
         next_size_count    <= size_count;
         done               <= '0';
-		  valid_start  		<= '0';
+	valid_start  		<= '0';
         theta_select_count <= "00";
         DS_2_count         <= "00";
         DS_3_select_sig    <= '0';
@@ -76,13 +76,13 @@ begin
                     next_size_reg <= size;
                 end if;
             when PRE =>
-					 valid_start <= '1';
+		valid_start <= '1';
                 next_size_count <= size_count + 1;
                 if cm_2_valid = '1' then
                     next_state <= CM;
                 end if;
             when CM =>
-					 valid_start <= '1';
+		valid_start <= '1';
                 next_size_count <= size_count + 1;
                 -- should the below be here or in the next stage?
                 -- also I think this should properly overflow from 3 to 0 as desired, but not certain...
@@ -91,7 +91,7 @@ begin
                     next_state <= DS_0;
                 end if;
             when DS_0 =>
-					 valid_start <= '1';
+		valid_start <= '1';
                 next_size_count    <= size_count + 1;
                 theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
                 DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
@@ -99,7 +99,7 @@ begin
                     next_state <= DS_0;
                 end if;
             when DS_1 =>
-					 valid_start <= '1';
+		valid_start <= '1';
                 next_size_count    <= size_count + 1;
                 theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
                 DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
@@ -108,7 +108,7 @@ begin
                     next_state <= MAIN;
                 end if;
             when MAIN =>
-					 valid_start <= '1';
+		valid_start <= '1';
                 next_size_count    <= size_count + 1;
                 theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
                 DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));

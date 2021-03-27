@@ -19,7 +19,7 @@ architecture TB of top_level_tb is
     -- Generics
     constant width : positive := TEST_WIDTH;
 
-    constant C_FILE_NAME : string := "/home/boris/UF/SHREC_Research/Pipelined-FFT/tb_testInput_1.csv";
+    constant C_FILE_NAME : string := "/home/UFAD/jgolabek1/Pipelined-FFT/Pipelined-FFT/tb_testInput_1.csv";
 
     -- Ports
     signal clk       : std_logic := '0';
@@ -153,9 +153,20 @@ begin
 
         end loop;
 
-        wait until done = '1';
+	wait until rising_edge(clk);
 
-        for i in 0 to 4 loop
+	r0_input <= (others => '0');
+        i0_input <= (others => '0');
+        r1_input <= (others => '0');
+        i1_input <= (others => '0');
+        r2_input <= (others => '0');
+        i2_input <= (others => '0');
+        r3_input <= (others => '0');
+        i3_input <= (others => '0');
+
+        --wait until done = '1';
+
+        for i in 0 to 25 loop
             wait until clk'event and clk = '1';
         end loop; -- i
 
