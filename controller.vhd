@@ -32,11 +32,12 @@ end controller;
 
 architecture BHV of controller is
 
-    type STATE_TYPE is (INIT, PRE, CM, DS_0, DS_1, MAIN, DRAIN, FIN);
+    type STATE_TYPE is (INIT, MAIN, FIN);
 
     signal state, next_state           : STATE_TYPE;
     signal size_reg, next_size_reg     : std_logic_vector(31 downto 0);
-    signal size_count, next_size_count : integer := 0;
+    signal size_count, next_size_count : integer := 0; 
+    signal output_count, next_output_count : integer := 0;
 
     signal theta_select_count : std_logic_vector(1 downto 0) := "00";
     signal DS_2_count         : std_logic_vector(1 downto 0) := "00";
@@ -50,21 +51,24 @@ begin
             state      <= INIT;
             size_reg   <= (others => '0');
             size_count <= 0;
+	    output_count <= 0;
         elsif rising_edge(clk) then
             state      <= next_state;
             size_reg   <= next_size_reg;
             size_count <= next_size_count;
+	    output_count <= next_output_count;
         end if;
     end process;
 
-    comb_proc : process (state, go, cm_2_valid, ds_2_valid, ds_3_valid, valid_end, size_count) -- removed these: theta_select_count, DS_2_count, DS_3_select_sig, size_reg, size, 
+    comb_proc : process (state, go, cm_2_valid, ds_2_valid, ds_3_valid, valid_end, size_count, output_count) -- removed these: theta_select_count, DS_2_count, DS_3_select_sig, size_reg, size, 
     begin
 
         next_state         <= state;
         next_size_reg      <= size_reg;
         next_size_count    <= size_count;
+	next_output_count  <= output_count;
         done               <= '0';
-	valid_start  		<= '0';
+	valid_start  	   <= '0';
         theta_select_count <= "00";
         DS_2_count         <= "00";
         DS_3_select_sig    <= '0';
@@ -72,57 +76,38 @@ begin
         case state is
             when INIT =>
                 if go = '1' then
-                    next_state    <= PRE;
+                    next_state    <= MAIN;
                     next_size_reg <= size;
                 end if;
-            when PRE =>
-		valid_start <= '1';
-                next_size_count <= size_count + 1;
-                if cm_2_valid = '1' then
-                    next_state <= CM;
+
+	    when MAIN =>		
+		if size_count < (to_integer(unsigned(size_reg)) - 1) then -- please don't let there be a size-1 comparison error here :[
+		    next_size_count    <= size_count + 1;
+		    valid_start <= '1';
+			 	                       
                 end if;
-            when CM =>
-		valid_start <= '1';
-                next_size_count <= size_count + 1;
-                -- should the below be here or in the next stage?
-                -- also I think this should properly overflow from 3 to 0 as desired, but not certain...
-                theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
-                if ds_2_valid = '1' then
-                    next_state <= DS_0;
-                end if;
-            when DS_0 =>
-		valid_start <= '1';
-                next_size_count    <= size_count + 1;
-                theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
-                DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
-                if ds_3_valid = '1' then
-                    next_state <= DS_0;
-                end if;
-            when DS_1 =>
-		valid_start <= '1';
-                next_size_count    <= size_count + 1;
-                theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
-                DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
-                DS_3_select_sig    <= not(DS_3_select_sig);
-                if valid_end = '1' then
-                    next_state <= MAIN;
-                end if;
-            when MAIN =>
-		valid_start <= '1';
-                next_size_count    <= size_count + 1;
-                theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
-                DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
-                DS_3_select_sig    <= not(DS_3_select_sig);
-                if size_count >= (to_integer(unsigned(size_reg)) - 1) then
-                    next_state <= DRAIN;
-                end if;
-            when DRAIN =>
-                theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
-                DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
-                DS_3_select_sig    <= not(DS_3_select_sig);
-                if valid_end = '0' then
-                    next_state <= FIN;
-                end if;
+
+	    	if cm_2_valid <= '1' then
+		    theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
+		end if;
+
+		if ds_2_valid <= '1' then
+		    DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
+		end if;
+
+		if ds_3_valid = '1' then
+		    DS_3_select_sig    <= not(DS_3_select_sig);
+		end if;
+
+		if valid_end = '1' then
+		    next_output_count <= output_count + 1;
+		end if;	
+
+		if output_count  >= (to_integer(unsigned(size_reg)) - 1) then
+		    done <= '1';
+		    next_state <= FIN;
+		end if;
+         
             when FIN =>
                 done <= '1';
                 if go = '0' then -- should check for go = 0 to make sure it has been cleared and then set again
