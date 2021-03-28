@@ -33,15 +33,15 @@ architecture STR of datapath is
     signal b_0_1_out_0_real, b_0_1_out_0_img, b_0_1_out_1_real, b_0_1_out_1_img : std_logic_vector(width - 1 downto 0);
     signal b_0_1_db_out_0_real, b_0_1_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
     signal b_0_1_tm_out_1_real_2x, b_0_1_tm_out_1_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
-    alias b_0_1_tm_out_1_real is b_0_1_tm_out_1_real_2x((width * 2) - 1 downto width);
-    alias b_0_1_tm_out_1_img is b_0_1_tm_out_1_img_2x((width * 2) - 1 downto width);
+    alias b_0_1_tm_out_1_real is b_0_1_tm_out_1_real_2x((width * 2) - 2 downto width - 1);
+    alias b_0_1_tm_out_1_img is b_0_1_tm_out_1_img_2x((width * 2) - 2 downto width - 1);
 
     -- Stage 1
     signal b_1_0_out_0_real, b_1_0_out_0_img, b_1_0_out_1_real, b_1_0_out_1_img : std_logic_vector(width - 1 downto 0);
     signal b_1_0_db_out_0_real, b_1_0_db_out_0_img                              : std_logic_vector(width - 1 downto 0);
     signal b_1_0_cm_out_1_real_2x, b_1_0_cm_out_1_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
-    alias b_1_0_cm_out_1_real is b_1_0_cm_out_1_real_2x((width * 2) - 1 downto width);
-    alias b_1_0_cm_out_1_img is b_1_0_cm_out_1_img_2x((width * 2) - 1 downto width);
+    alias b_1_0_cm_out_1_real is b_1_0_cm_out_1_real_2x((width * 2) - 2 downto width - 1);
+    alias b_1_0_cm_out_1_img is b_1_0_cm_out_1_img_2x((width * 2) - 2 downto width - 1);
 
     signal b_1_0_ds_out_0_real, b_1_0_ds_out_0_img : std_logic_vector(width - 1 downto 0);
     signal b_1_0_ds_out_1_real, b_1_0_ds_out_1_img : std_logic_vector(width - 1 downto 0);
@@ -49,12 +49,12 @@ architecture STR of datapath is
 
     signal b_1_1_out_0_real, b_1_1_out_0_img, b_1_1_out_1_real, b_1_1_out_1_img : std_logic_vector(width - 1 downto 0);
     signal b_1_1_cm_out_0_real_2x, b_1_1_cm_out_0_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
-    alias b_1_1_cm_out_0_real is b_1_1_cm_out_0_real_2x((width * 2) - 1 downto width);
-    alias b_1_1_cm_out_0_img is b_1_1_cm_out_0_img_2x((width * 2) - 1 downto width);
+    alias b_1_1_cm_out_0_real is b_1_1_cm_out_0_real_2x((width * 2) - 2 downto width - 1);
+    alias b_1_1_cm_out_0_img is b_1_1_cm_out_0_img_2x((width * 2) - 2 downto width - 1);
 
     signal b_1_1_cm_out_1_real_2x, b_1_1_cm_out_1_img_2x : std_logic_vector((width * 2) - 1 downto 0);
-    alias b_1_1_cm_out_1_real is b_1_1_cm_out_1_real_2x((width * 2) - 1 downto width);
-    alias b_1_1_cm_out_1_img is b_1_1_cm_out_1_img_2x((width * 2) - 1 downto width);
+    alias b_1_1_cm_out_1_real is b_1_1_cm_out_1_real_2x((width * 2) - 2 downto width - 1);
+    alias b_1_1_cm_out_1_img is b_1_1_cm_out_1_img_2x((width * 2) - 2 downto width - 1);
 
     signal b_1_1_ds_out_0_real, b_1_1_ds_out_0_img : std_logic_vector(width - 1 downto 0);
     signal b_1_1_ds_out_1_real, b_1_1_ds_out_1_img : std_logic_vector(width - 1 downto 0);
@@ -72,14 +72,10 @@ architecture STR of datapath is
     signal b_2_1_ds_out_0_real, b_2_1_ds_out_0_img                              : std_logic_vector(width - 1 downto 0);
     signal b_2_1_ds_out_1_real, b_2_1_ds_out_1_img                              : std_logic_vector(width - 1 downto 0);
     signal b_2_1_tm_out_1_real_2x, b_2_1_tm_out_1_img_2x                        : std_logic_vector((width * 2) - 1 downto 0);
-    alias b_2_1_tm_out_1_real is b_2_1_tm_out_1_real_2x((width * 2) - 1 downto width);
-    alias b_2_1_tm_out_1_img is b_2_1_tm_out_1_img_2x((width * 2) - 1 downto width);
+    alias b_2_1_tm_out_1_real is b_2_1_tm_out_1_real_2x((width * 2) - 2 downto width - 1);
+    alias b_2_1_tm_out_1_img is b_2_1_tm_out_1_img_2x((width * 2) - 2 downto width - 1);
 
     signal b_2_1_db_out_0_real, b_2_1_db_out_0_img : std_logic_vector(width - 1 downto 0);
-
-    -- Stage 3
-    signal b_3_0_out_0_real, b_3_0_out_0_img, b_3_0_out_1_real, b_3_0_out_1_img : std_logic_vector(width - 1 downto 0);
-    signal b_3_1_out_0_real, b_3_1_out_0_img, b_3_1_out_1_real, b_3_1_out_1_img : std_logic_vector(width - 1 downto 0);
 
 begin
 

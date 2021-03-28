@@ -13,8 +13,8 @@ entity controller is
         size : in std_logic_vector(31 downto 0);
         done : out std_logic;
 
-		  -- valid signal to datapath delay entity
-		  valid_start : out std_logic;
+        -- valid signal to datapath delay entity
+        valid_start : out std_logic;
 		  
         -- valid signals from datapath delay entity
         cm_2_valid : in std_logic;
@@ -72,9 +72,9 @@ begin
         next_state         <= state;
         next_size_reg      <= size_reg;
         next_size_count    <= size_count;
-	next_output_count  <= output_count;
+	    next_output_count  <= output_count;
         done               <= '0';
-	valid_start  	   <= '0';
+	    valid_start  	   <= '0';
         next_theta_select_count <= theta_select_count;
         next_DS_2_count         <= DS_2_count;
         next_DS_3_select_sig    <= DS_3_select_sig;
@@ -110,7 +110,7 @@ begin
 		end if;	
 
 		if output_count  >= (to_integer(unsigned(size_reg)) - 1) then
-		    done <= '1';
+		    -- done <= '1';
 		    next_state <= FIN;
 		end if;
          

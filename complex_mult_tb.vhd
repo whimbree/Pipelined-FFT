@@ -9,6 +9,8 @@ architecture TB of complex_mult_tb is
 
     -- Clock period
     constant clk_period : time := 10 ns;
+    -- Pipeline length
+    constant pipeline_length : positive := 4;
     -- Generics
     constant width : positive := 16;
 
@@ -55,7 +57,7 @@ begin
         datab_real <= std_logic_vector(to_signed(3, datab_real'length));
         datab_imag <= std_logic_vector(to_signed(4, datab_imag'length));
 
-        for i in 0 to 3 loop
+        for i in 0 to pipeline_length loop
             wait until rising_edge(clk);
         end loop; -- i
 
@@ -71,7 +73,7 @@ begin
         datab_real <= std_logic_vector(to_signed(1337, datab_real'length));
         datab_imag <= std_logic_vector(to_signed(8008, datab_imag'length));
 
-        for i in 0 to 3 loop
+        for i in 0 to pipeline_length loop
             wait until rising_edge(clk);
         end loop; -- i
 

@@ -12,14 +12,14 @@ end;
 architecture TB of top_level_tb is
 
     constant TEST_WIDTH : positive := 16;
-    constant TEST_SIZE  : positive := 4;
+    constant TEST_SIZE  : positive := 8;
 
     -- Clock period
     constant clk_period : time := 5 ns;
     -- Generics
     constant width : positive := TEST_WIDTH;
 
-    constant C_FILE_NAME : string := "/home/UFAD/jgolabek1/Pipelined-FFT/Pipelined-FFT/tb_testInput_1.csv";
+    constant C_FILE_NAME : string := "/Users/Justin Golabek/Documents/My documents/School/Research/SHREC/CnM_CiM/src/Pipelined-FFT/tb_testInput_1.csv";
 
     -- Ports
     signal clk       : std_logic := '0';
@@ -105,6 +105,15 @@ begin
         size <= (others => '0');
         go   <= '0';
 
+        r0_input <= (others => '0');
+        i0_input <= (others => '0');
+        r1_input <= (others => '0');
+        i1_input <= (others => '0');
+        r2_input <= (others => '0');
+        i2_input <= (others => '0');
+        r3_input <= (others => '0');
+        i3_input <= (others => '0');
+
         for i in 0 to 4 loop
             wait until rising_edge(clk);
         end loop; -- i
@@ -156,13 +165,13 @@ begin
 	wait until rising_edge(clk);
 
 	r0_input <= (others => '0');
-        i0_input <= (others => '0');
-        r1_input <= (others => '0');
-        i1_input <= (others => '0');
-        r2_input <= (others => '0');
-        i2_input <= (others => '0');
-        r3_input <= (others => '0');
-        i3_input <= (others => '0');
+    i0_input <= (others => '0');
+    r1_input <= (others => '0');
+    i1_input <= (others => '0');
+    r2_input <= (others => '0');
+    i2_input <= (others => '0');
+    r3_input <= (others => '0');
+    i3_input <= (others => '0');
 
         --wait until done = '1';
 
@@ -171,7 +180,8 @@ begin
         end loop; -- i
 
         go <= '0';
-
+            
+        sim_done <= '1';    
         report "SIMULATION FINISHED!!!";
         wait;
     end process;

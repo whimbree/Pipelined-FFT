@@ -45,10 +45,10 @@ begin
             p1 <= a1 * y_i_reg_d;
             p2 <= a2 * x_r_reg_d;
             p3 <= a3 * x_i_reg_d;
+
+            -- stage 4
+            result_real <= std_logic_vector(p1 + p2);
+            result_imag <= std_logic_vector(p1 + p3);
         end if;
     end process;
-
-    result_real <= std_logic_vector(p1 + p2);
-    result_imag <= std_logic_vector(p1 + p3);
-
 end BHV_PIPELINED;
