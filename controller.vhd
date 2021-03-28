@@ -51,18 +51,18 @@ begin
             state      <= INIT;
             size_reg   <= (others => '0');
             size_count <= 0;
-	    output_count <= 0;
-	    theta_select_count <= "00";
-	    DS_2_count <= "00";
-	    DS_3_select_sig <= '0';
+            output_count <= 0;
+            theta_select_count <= "00";
+            DS_2_count <= "00";
+            DS_3_select_sig <= '0';
         elsif rising_edge(clk) then
             state      <= next_state;
             size_reg   <= next_size_reg;
             size_count <= next_size_count;
-	    output_count <= next_output_count;
-	    theta_select_count <= next_theta_select_count;
-	    DS_2_count <= next_DS_2_count;
-	    DS_3_select_sig <= next_DS_3_select_sig;
+            output_count <= next_output_count;
+            theta_select_count <= next_theta_select_count;
+            DS_2_count <= next_DS_2_count;
+            DS_3_select_sig <= next_DS_3_select_sig;
         end if;
     end process;
 
@@ -87,32 +87,31 @@ begin
                 end if;
 
 	    when MAIN =>		
-		if size_count < to_integer(unsigned(size_reg)) then
-		    next_size_count    <= size_count + 1;
-		    valid_start <= '1';
-			 	                       
-                end if;
+            if size_count < to_integer(unsigned(size_reg)) then
+                next_size_count    <= size_count + 1;
+                valid_start <= '1';                                        
+            end if;
 
-	    	if cm_2_valid = '1' then
-		    next_theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
-		end if;
+                if cm_2_valid = '1' then
+                next_theta_select_count <= std_logic_vector(resize(1 + unsigned(theta_select_count), 2));
+            end if;
 
-		if ds_2_valid = '1' then
-		    next_DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
-		end if;
+            if ds_2_valid = '1' then
+                next_DS_2_count         <= std_logic_vector(resize(1 + unsigned(DS_2_count), 2));
+            end if;
 
-		if ds_3_valid = '1' then
-		    next_DS_3_select_sig    <= not(DS_3_select_sig);
-		end if;
+            if ds_3_valid = '1' then
+                next_DS_3_select_sig    <= not(DS_3_select_sig);
+            end if;
 
-		if valid_end = '1' then
-		    next_output_count <= output_count + 1;
-		end if;	
+            if valid_end = '1' then
+                next_output_count <= output_count + 1;
+            end if;	
 
-		if output_count  >= (to_integer(unsigned(size_reg)) - 1) then
-		    -- done <= '1';
-		    next_state <= FIN;
-		end if;
+            if output_count  >= (to_integer(unsigned(size_reg)) - 1) then
+                -- done <= '1';
+                next_state <= FIN;
+            end if;
          
             when FIN =>
                 done <= '1';

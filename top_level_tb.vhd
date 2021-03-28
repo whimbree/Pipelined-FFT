@@ -84,13 +84,19 @@ begin
 
     test_process : process
 
+        function Read_Decimal(in1 : real)
+            return std_logic_vector is 
+            begin
+                return std_logic_vector(to_signed(integer(in1 * real(2**(TEST_WIDTH-1))), TEST_WIDTH));
+            end Read_Decimal;
+
         variable read_col_from_input_buf : line; -- read lines one by one from input_buf
         variable write_col_to_output_buf : line; -- write lines one by one to output_buf
 
         variable buf_data_from_file : line; -- buffer for storind the data from input read-file
-
-        variable input_0_real, input_1_real, input_2_real, input_3_real : std_logic_vector(width - 1 downto 0);
-        variable input_0_imag, input_1_imag, input_2_imag, input_3_imag : std_logic_vector(width - 1 downto 0);
+        
+        variable input_0_real, input_1_real, input_2_real, input_3_real : real;
+        variable input_0_imag, input_1_imag, input_2_imag, input_3_imag : real;
 
         variable fstatus : file_open_status;
 
@@ -129,35 +135,35 @@ begin
             readline(fptr, file_line);
 
             read(file_line, input_0_real);
-            r0_input <= input_0_real;
+            r0_input <= Read_Decimal(input_0_real);
             read(file_line, read_char);
 
             read(file_line, input_0_imag);
-            i0_input <= input_0_imag;
+            i0_input <= Read_Decimal(input_0_imag);
             read(file_line, read_char);
 
             read(file_line, input_1_real);
-            r1_input <= input_1_real;
+            r1_input <= Read_Decimal(input_1_real);
             read(file_line, read_char);
 
             read(file_line, input_1_imag);
-            i1_input <= input_1_imag;
+            i1_input <= Read_Decimal(input_1_imag);
             read(file_line, read_char);
 
             read(file_line, input_2_real);
-            r2_input <= input_2_real;
+            r2_input <= Read_Decimal(input_2_real);
             read(file_line, read_char);
 
             read(file_line, input_2_imag);
-            i2_input <= input_2_imag;
+            i2_input <= Read_Decimal(input_2_imag);
             read(file_line, read_char);
 
             read(file_line, input_3_real);
-            r3_input <= input_3_real;
+            r3_input <= Read_Decimal(input_3_real);
             read(file_line, read_char);
 
             read(file_line, input_3_imag);
-            i3_input <= input_3_imag;
+            i3_input <= Read_Decimal(input_3_imag);
             read(file_line, read_char);
 
         end loop;
