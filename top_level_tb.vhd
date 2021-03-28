@@ -27,6 +27,7 @@ architecture TB of top_level_tb is
     signal done      : std_logic;
     signal go        : std_logic;
     signal size      : std_logic_vector(31 downto 0);
+    signal valid_output : std_logic;
     signal r0_input  : std_logic_vector(width - 1 downto 0);
     signal r1_input  : std_logic_vector(width - 1 downto 0);
     signal r2_input  : std_logic_vector(width - 1 downto 0);
@@ -48,6 +49,8 @@ architecture TB of top_level_tb is
 
     file fptr : text;
 
+    file fptr_out : text;
+
 begin
 
     -- toggle clock
@@ -64,6 +67,7 @@ begin
             done      => done,
             go        => go,
             size      => size,
+            valid_output => valid_output,
             r0_input  => r0_input,
             r1_input  => r1_input,
             r2_input  => r2_input,
@@ -105,7 +109,7 @@ begin
         variable read_char : character;
     begin
 
-        file_open(fstatus, fptr, C_FILE_NAME, read_mode);
+        file_open(fstatus, fptr, C_FILE_NAME_INPUT, read_mode);
 
         rst  <= '1';
         size <= (others => '0');
@@ -190,5 +194,58 @@ begin
         sim_done <= '1';
         report "SIMULATION FINISHED!!!";
         wait;
+    end process;
+
+    output_process : process(clk)
+
+    function Write_Decimal(in1 : std_logic_vector)
+    return real is 
+    begin
+        return real(to_integer(signed(in1))) / real(2**(TEST_WIDTH-1));
+    end Write_Decimal;
+
+    variable output_0_real, output_1_real, output_2_real, output_3_real : real;
+    variable output_0_imag, output_1_imag, output_2_imag, output_3_imag : real;
+
+    variable fstatus : file_open_status;
+
+    variable file_line : line;
+
+    variable read_char : character;
+
+    begin
+
+        file_open(fstatus, fptr_out, C_FILE_NAME_OUTPUT, write_mode);
+
+        if (sim_done = '0') then
+
+            if (valid_output = '1' and rising_edge(clk)) then
+                output_0_real := Write_Decimal(r0_output);
+                write(file_line, output_0_real);
+                write(file_line, string'(","));
+                output_0_real := Write_Decimal(i0_output);
+                write(file_line, output_0_real);
+                write(file_line, string'(","));
+                output_0_real := Write_Decimal(r1_output);
+                write(file_line, output_0_real);
+                write(file_line, string'(","));
+                output_0_real := Write_Decimal(i1_output);
+                write(file_line, output_0_real);
+                write(file_line, string'(","));
+                output_0_real := Write_Decimal(r2_output);
+                write(file_line, output_0_real);
+                write(file_line, string'(","));
+                output_0_real := Write_Decimal(i2_output);
+                write(file_line, output_0_real);
+                write(file_line, string'(","));
+                output_0_real := Write_Decimal(r3_output);
+                write(file_line, output_0_real);
+                write(file_line, string'(","));
+                output_0_real := Write_Decimal(i3_output);
+                write(file_line, output_0_real);
+
+                writeline(fptr_out, file_line);
+            end if;
+        end if;
     end process;
 end TB;

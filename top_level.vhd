@@ -14,6 +14,8 @@ entity top_level is
         go   : in std_logic;
         size : in std_logic_vector(31 downto 0);
 
+        valid_output : out std_logic;
+
         r0_input, r1_input, r2_input, r3_input     : in std_logic_vector(width - 1 downto 0);
         i0_input, i1_input, i2_input, i3_input     : in std_logic_vector(width - 1 downto 0);
         r0_output, r1_output, r2_output, r3_output : out std_logic_vector(width - 1 downto 0);
@@ -28,6 +30,8 @@ architecture STR of top_level is
     signal ds_2_select, ds_3_select                      : std_logic;
 
 begin
+
+    valid_output <= output_valid;
 
     controller : entity work.controller
         port map(
