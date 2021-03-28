@@ -4,6 +4,8 @@ use ieee.numeric_std.all;
 use std.textio.all;
 use ieee.std_logic_textio.all;
 
+use work.tb_files_pkg.all;
+
 use work.csv_file_reader_pkg.all;
 
 entity top_level_tb is
@@ -18,8 +20,6 @@ architecture TB of top_level_tb is
     constant clk_period : time := 5 ns;
     -- Generics
     constant width : positive := TEST_WIDTH;
-
-    constant C_FILE_NAME : string := "/Users/Justin Golabek/Documents/My documents/School/Research/SHREC/CnM_CiM/src/Pipelined-FFT/tb_testInput_1.csv";
 
     -- Ports
     signal clk       : std_logic := '0';
@@ -52,7 +52,7 @@ begin
 
     -- toggle clock
     clk <= not clk after 5 ns when sim_done = '0' else -- it may be better to manually toggle the clock?
-    clk;
+        clk;
 
     top_level_inst : entity work.top_level
         generic map(
@@ -168,16 +168,16 @@ begin
 
         end loop;
 
-	wait until rising_edge(clk);
+        wait until rising_edge(clk);
 
-	r0_input <= (others => '0');
-    i0_input <= (others => '0');
-    r1_input <= (others => '0');
-    i1_input <= (others => '0');
-    r2_input <= (others => '0');
-    i2_input <= (others => '0');
-    r3_input <= (others => '0');
-    i3_input <= (others => '0');
+        r0_input <= (others => '0');
+        i0_input <= (others => '0');
+        r1_input <= (others => '0');
+        i1_input <= (others => '0');
+        r2_input <= (others => '0');
+        i2_input <= (others => '0');
+        r3_input <= (others => '0');
+        i3_input <= (others => '0');
 
         --wait until done = '1';
 
@@ -186,8 +186,8 @@ begin
         end loop; -- i
 
         go <= '0';
-            
-        sim_done <= '1';    
+
+        sim_done <= '1';
         report "SIMULATION FINISHED!!!";
         wait;
     end process;

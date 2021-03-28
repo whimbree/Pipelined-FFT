@@ -5,3 +5,6 @@
 **/*.qpf
 **/*.qsf
 **/*.qws
+
+# Absolute paths to testbench csv files
+tb_files_pkg.vhd

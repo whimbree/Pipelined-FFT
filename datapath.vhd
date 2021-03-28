@@ -93,9 +93,6 @@ begin
             clk => clk,
             rst => rst,
 
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
-
             input_0_real => r0_input,
             input_0_img  => i0_input,
             input_1_real => r1_input,
@@ -112,9 +109,6 @@ begin
         port map(
             clk => clk,
             rst => rst,
-
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
 
             input_0_real => r2_input,
             input_0_img  => i2_input,
@@ -184,9 +178,6 @@ begin
             clk => clk,
             rst => rst,
 
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
-
             input_0_real => b_0_0_db_out_0_real,
             input_0_img  => b_0_0_db_out_0_img,
             input_1_real => b_0_1_db_out_0_real,
@@ -203,9 +194,6 @@ begin
         port map(
             clk => clk,
             rst => rst,
-
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
 
             input_0_real => b_0_0_db_out_1_real,
             input_0_img  => b_0_0_db_out_1_img,
@@ -369,9 +357,6 @@ begin
             clk => clk,
             rst => rst,
 
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
-
             input_0_real => b_1_0_ds_out_0_real,
             input_0_img  => b_1_0_ds_out_0_img,
             input_1_real => b_1_0_ds_out_1_real,
@@ -388,9 +373,6 @@ begin
         port map(
             clk => clk,
             rst => rst,
-
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
 
             input_0_real => b_1_1_ds_out_0_real,
             input_0_img  => b_1_1_ds_out_0_img,
@@ -500,9 +482,6 @@ begin
             clk => clk,
             rst => rst,
 
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
-
             input_0_real => b_2_0_db_out_0_real,
             input_0_img  => b_2_0_db_out_0_img,
             input_1_real => b_2_0_db_out_1_real,
@@ -519,9 +498,6 @@ begin
         port map(
             clk => clk,
             rst => rst,
-
-            twiddle_real => (others => '0'),
-            twiddle_img => (others => '0'),
 
             input_0_real => b_2_1_db_out_0_real,
             input_0_img  => b_2_1_db_out_0_img,

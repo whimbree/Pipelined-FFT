@@ -28,10 +28,10 @@ architecture TB of complex_mult_tb is
 begin
 
     -- toggle clock
-    clk <= not clk after clk_period when sim_done = '0' else -- it may be better to manually toggle the clock?
-    clk;
+    clk <= not clk after clk_period when sim_done = '0' else
+        clk;
 
-    complex_mult_inst : entity work.complex_mult
+    UUT : entity work.complex_mult
         generic map(
             width => width
         )
@@ -42,8 +42,7 @@ begin
             datab_real  => datab_real,
             datab_imag  => datab_imag,
             result_real => result_real,
-            result_imag => result_imag
-        );
+            result_imag => result_imag);
 
     process
 
