@@ -20,8 +20,8 @@ end complex_mult;
 architecture BHV_PIPELINED of complex_mult is
     signal x_r_reg, x_i_reg, y_r_reg, y_i_reg : signed(width - 1 downto 0);
     signal x_r_reg_d, x_i_reg_d, y_i_reg_d    : signed(width - 1 downto 0);
-    signal a1, a2, a3                         : signed(width - 1 downto 0);
-    signal p1, p2, p3                         : signed((width * 2) - 1 downto 0);
+    signal a1, a2, a3                         : signed(width downto 0);
+    signal p1, p2, p3                         : signed((width * 2) downto 0);
 begin
     process (clock)
     begin
@@ -33,9 +33,9 @@ begin
             y_i_reg <= signed(datab_imag);
 
             -- stage 2
-            a1 <= x_r_reg - x_i_reg;
-            a2 <= y_r_reg - y_i_reg;
-            a3 <= y_r_reg + y_i_reg;
+            a1 <= resize(x_r_reg, width+1) - resize(x_i_reg, width+1);
+            a2 <= resize(y_r_reg, width+1) - resize(y_i_reg, width+1);
+            a3 <= resize(y_r_reg, width+1) + resize(y_i_reg, width+1);
             -- preserve old registers for use in stage 3
             x_r_reg_d <= x_r_reg;
             x_i_reg_d <= x_i_reg;
@@ -47,8 +47,8 @@ begin
             p3 <= a3 * x_i_reg_d;
 
             -- stage 4
-            result_real <= std_logic_vector(p1 + p2);
-            result_imag <= std_logic_vector(p1 + p3);
+            result_real <= std_logic_vector(resize(p1 + p2, width * 2));
+            result_imag <= std_logic_vector(resize(p1 + p3, width * 2));
         end if;
     end process;
 end BHV_PIPELINED;

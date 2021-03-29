@@ -14,7 +14,7 @@ end;
 architecture TB of top_level_tb is
 
     constant TEST_WIDTH : positive := 16;
-    constant TEST_SIZE  : positive := 8;
+    constant TEST_SIZE  : positive := 12;
 
     -- Clock period
     constant clk_period : time := 5 ns;
@@ -222,25 +222,25 @@ begin
             if (valid_output = '1' and rising_edge(clk)) then
                 output_0_real := Write_Decimal(r0_output);
                 write(file_line, output_0_real);
-                write(file_line, string'(","));
+                write(file_line, string'(", "));
                 output_0_real := Write_Decimal(i0_output);
                 write(file_line, output_0_real);
-                write(file_line, string'(","));
+                write(file_line, string'(", "));
                 output_0_real := Write_Decimal(r1_output);
                 write(file_line, output_0_real);
-                write(file_line, string'(","));
+                write(file_line, string'(", "));
                 output_0_real := Write_Decimal(i1_output);
                 write(file_line, output_0_real);
-                write(file_line, string'(","));
+                write(file_line, string'(", "));
                 output_0_real := Write_Decimal(r2_output);
                 write(file_line, output_0_real);
-                write(file_line, string'(","));
+                write(file_line, string'(", "));
                 output_0_real := Write_Decimal(i2_output);
                 write(file_line, output_0_real);
-                write(file_line, string'(","));
+                write(file_line, string'(", "));
                 output_0_real := Write_Decimal(r3_output);
                 write(file_line, output_0_real);
-                write(file_line, string'(","));
+                write(file_line, string'(", "));
                 output_0_real := Write_Decimal(i3_output);
                 write(file_line, output_0_real);
 

@@ -396,8 +396,8 @@ begin
 
             input_0_real => b_2_0_out_0_real,
             input_0_img  => b_2_0_out_0_img,
-            input_1_real => b_2_0_out_1_real,
-            input_1_img  => b_2_0_out_1_img,
+            input_1_real => b_2_1_out_0_real,
+            input_1_img  => b_2_1_out_0_img,
 
             output_0_real => b_2_0_ds_out_0_real,
             output_0_img  => b_2_0_ds_out_0_img,
@@ -414,8 +414,8 @@ begin
 
             mux_select => ds_3_select,
 
-            input_0_real => b_2_1_out_0_real,
-            input_0_img  => b_2_1_out_0_img,
+            input_0_real => b_2_0_out_1_real,
+            input_0_img  => b_2_0_out_1_img,
             input_1_real => b_2_1_out_1_real,
             input_1_img  => b_2_1_out_1_img,
 
