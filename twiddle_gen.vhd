@@ -2,19 +2,21 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.user_pkg.all;
+
 entity twiddle_gen is
 
     generic (
         width : positive := 16;
         -- The below twiddle factor inputs specify the 'twiddle memory' for this particular instantiation
-        tw0_r : std_logic_vector(15 downto 0) := (others => '0');
-        tw0_i : std_logic_vector(15 downto 0) := (others => '0');
-        tw1_r : std_logic_vector(15 downto 0) := (others => '0');
-        tw1_i : std_logic_vector(15 downto 0) := (others => '0');
-        tw2_r : std_logic_vector(15 downto 0) := (others => '0');
-        tw2_i : std_logic_vector(15 downto 0) := (others => '0');
-        tw3_r : std_logic_vector(15 downto 0) := (others => '0');
-        tw3_i : std_logic_vector(15 downto 0) := (others => '0'));
+        tw0_r : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        tw0_i : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        tw1_r : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        tw1_i : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        tw2_r : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        tw2_i : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        tw3_r : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        tw3_i : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0'));
     port (
         -- this selects which of the generic inputted twiddle factors to output
         theta_index_select : in std_logic_vector(1 downto 0);

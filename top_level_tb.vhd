@@ -8,13 +8,15 @@ use work.tb_files_pkg.all;
 
 use work.csv_file_reader_pkg.all;
 
+use work.user_pkg.all;
+
 entity top_level_tb is
 end;
 
 architecture TB of top_level_tb is
 
-    constant TEST_WIDTH : positive := 16;
-    constant TEST_SIZE  : positive := 12;
+    constant TEST_WIDTH : positive := DATA_WIDTH;
+    constant TEST_SIZE  : positive := 4;
 
     -- Clock period
     constant clk_period : time := 5 ns;
