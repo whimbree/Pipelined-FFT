@@ -11,7 +11,7 @@ def main():
     num_points = int(input("How many points is the FFT?: "))
     data_width = int(input("What is the data width?: "))
 
-    constant_template = "constant $key  : std_logic_vector(DATA_RANGE) := std_logic_vector(to_signed(16#$value#, DATA_WIDTH));"
+    constant_template = 'constant $key  : std_logic_vector(DATA_RANGE) := x"$value";'
     constant_template_obj = Template(constant_template)
 
     print()
@@ -25,8 +25,10 @@ def main():
             real_value -= 1
         # https://stackoverflow.com/questions/7822956/how-to-convert-negative-integer-value-to-hex-in-python
         print(
-            constant_template_obj.substitute(key="REAL_" + str(k),
-                                             value='{:x}'.format(real_value)))
+            constant_template_obj.substitute(
+                key="REAL_" + str(k),
+                value='{:0x}'.format(real_value).zfill(
+                    math.ceil(data_width / 4))))
 
     print()
 
@@ -39,8 +41,10 @@ def main():
             imag_value -= 1
         # https://stackoverflow.com/questions/7822956/how-to-convert-negative-integer-value-to-hex-in-python
         print(
-            constant_template_obj.substitute(key="IMAG_" + str(k),
-                                             value='{:x}'.format(imag_value)))
+            constant_template_obj.substitute(
+                key="IMAG_" + str(k),
+                value='{:0x}'.format(imag_value).zfill(
+                    math.ceil(data_width / 4))))
 
 
 if __name__ == "__main__":

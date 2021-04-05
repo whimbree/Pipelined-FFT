@@ -6,8 +6,6 @@ use ieee.std_logic_textio.all;
 
 use work.tb_files_pkg.all;
 
-use work.csv_file_reader_pkg.all;
-
 use work.user_pkg.all;
 
 entity top_level_tb is

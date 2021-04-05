@@ -2,10 +2,12 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.user_pkg.all;
+
 entity top_level is
 
     generic (
-        width : positive := 16);
+        width : positive := DATA_WIDTH);
     port (
         clk : in std_logic;
         rst : in std_logic;
@@ -42,8 +44,8 @@ begin
             size => size,
             done => done,
 
-				valid_start => valid_start,
-				
+            valid_start => valid_start,
+
             cm_2_valid => cm2_valid,
             ds_2_valid => ds2_valid,
             ds_3_valid => ds3_valid,
@@ -96,8 +98,8 @@ begin
 
     datapath_delay : entity work.datapath_delay
         port map(
-            clk   => clk,
-            rst   => rst,
+            clk         => clk,
+            rst         => rst,
             input_valid => valid_start,
 
             cm2_valid    => cm2_valid,
