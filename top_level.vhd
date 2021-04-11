@@ -26,10 +26,8 @@ entity top_level is
 end top_level;
 
 architecture STR of top_level is
-    signal cm2_valid, ds2_valid, ds3_valid, output_valid : std_logic;
-    signal theta_select                                  : std_logic_vector(1 downto 0);
-    signal valid_start                                   : std_logic := '1';
-    signal ds_2_select, ds_3_select                      : std_logic;
+
+    signal input_valid, output_valid : std_logic;
 
 begin
 
@@ -44,33 +42,20 @@ begin
             size => size,
             done => done,
 
-            valid_start => valid_start,
+            valid_start => input_valid,
 
-            cm_2_valid => cm2_valid,
-            ds_2_valid => ds2_valid,
-            ds_3_valid => ds3_valid,
-            valid_end  => output_valid,
-
-            theta_select_2 => theta_select,
-
-            ds_select_2 => ds_2_select,
-            ds_select_3 => ds_3_select);
+            valid_end => output_valid);
 
     datapath : entity work.datapath
         generic map(
-            width => width)
+            num_internal_stage_pairs => 1,
+            width                    => width)
         port map(
             clk => clk,
             rst => rst,
 
-            tg0_select => theta_select,
-            tg1_select => theta_select,
-            tg2_select => theta_select,
-
-            ds_0_select => ds_2_select,
-            ds_1_select => ds_2_select,
-            ds_2_select => ds_3_select,
-            ds_3_select => ds_3_select,
+            input_valid  => input_valid,
+            output_valid => output_valid,
 
             r0_input => r0_input,
             i0_input => i0_input,
@@ -95,16 +80,5 @@ begin
 
             r3_output => r3_output,
             i3_output => i3_output);
-
-    datapath_delay : entity work.datapath_delay
-        port map(
-            clk         => clk,
-            rst         => rst,
-            input_valid => valid_start,
-
-            cm2_valid    => cm2_valid,
-            ds2_valid    => ds2_valid,
-            ds3_valid    => ds3_valid,
-            output_valid => output_valid);
 
 end STR;

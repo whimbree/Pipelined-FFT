@@ -38,7 +38,7 @@ def main():
         # REAL TWIDDLE FACTOR GENERATION
 
         f.write(
-            f"constant REAL_TWIDDLE_FACTORS : TWIDDLE_ARRAY(TWIDDLE_RANGE) := ("
+            f"constant TWIDDLE_FACTORS_REAL : TWIDDLE_ARRAY(TWIDDLE_RANGE) := ("
         )
 
         for k in range(0, num_points):
@@ -59,7 +59,7 @@ def main():
         # IMAGINARY TWIDDLE FACTOR GENERATION
 
         f.write(
-            f"constant IMAG_TWIDDLE_FACTORS : TWIDDLE_ARRAY(TWIDDLE_RANGE) := ("
+            f"constant TWIDDLE_FACTORS_IMAG : TWIDDLE_ARRAY(TWIDDLE_RANGE) := ("
         )
 
         array_value_template = '$index => x"$value"'
@@ -79,6 +79,11 @@ def main():
                 f.write("\n")
 
         f.write(");\n\n")
+
+        f.write(
+            "constant ZERO : std_logic_vector(DATA_RANGE) := (others => '0');\n\n"
+            "constant NEGATIVE_ONE : std_logic_vector(DATA_RANGE) := ((DATA_WIDTH - 1) => '1', others => '0');\n\n"
+        )
 
         f.write("end user_pkg;")
 

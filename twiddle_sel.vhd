@@ -13,34 +13,32 @@ entity twiddle_sel is
         clk : in std_logic;
         rst : in std_logic;
 
-        count_en    : in std_logic;
-        twiddle_idx : out natural range 0 to 65535);
+        count_en     : in std_logic;
+        twiddle_real : out std_logic_vector(DATA_RANGE);
+        twiddle_imag : out std_logic_vector(DATA_RANGE));
 end twiddle_sel;
 
 architecture BHV of twiddle_sel is
 
-    signal count                : natural range 0 to 65535;
-    signal twiddle_idx_internal : natural range 0 to 65535;
+    signal twiddle_idx : natural range 0 to len_sequence * increment_amt;
 
 begin
     process (clk, rst)
     begin
         if rising_edge(clk) then
             if rst = '1' then
-                count                <= 0;
-                twiddle_idx_internal <= 0;
+                twiddle_idx <= 0;
             elsif count_en = '1' then
-                if count = len_sequence then
-                    count                <= 0;
-                    twiddle_idx_internal <= 0;
+                if twiddle_idx = len_sequence * increment_amt then
+                    twiddle_idx <= 0;
                 else
-                    count                <= count + 1;
-                    twiddle_idx_internal <= twiddle_idx_internal + twiddle_idx_internal;
+                    twiddle_idx <= twiddle_idx + increment_amt;
                 end if;
             end if;
         end if;
     end process;
 
-    twiddle_idx <= twiddle_idx_internal;
+    twiddle_real <= TWIDDLE_FACTORS_REAL(twiddle_idx);
+    twiddle_imag <= TWIDDLE_FACTORS_IMAG(twiddle_idx);
 
 end BHV;

@@ -33,9 +33,9 @@ begin
             y_i_reg <= signed(datab_imag);
 
             -- stage 2
-            a1 <= resize(x_r_reg, width+1) - resize(x_i_reg, width+1);
-            a2 <= resize(y_r_reg, width+1) - resize(y_i_reg, width+1);
-            a3 <= resize(y_r_reg, width+1) + resize(y_i_reg, width+1);
+            a1 <= resize(x_r_reg, width + 1) - resize(x_i_reg, width + 1);
+            a2 <= resize(y_r_reg, width + 1) - resize(y_i_reg, width + 1);
+            a3 <= resize(y_r_reg, width + 1) + resize(y_i_reg, width + 1);
             -- preserve old registers for use in stage 3
             x_r_reg_d <= x_r_reg;
             x_i_reg_d <= x_i_reg;
@@ -45,10 +45,10 @@ begin
             p1 <= a1 * y_i_reg_d;
             p2 <= a2 * x_r_reg_d;
             p3 <= a3 * x_i_reg_d;
-
-            -- stage 4
-            result_real <= std_logic_vector(resize(p1 + p2, width * 2));
-            result_imag <= std_logic_vector(resize(p1 + p3, width * 2));
         end if;
     end process;
+
+    result_real <= std_logic_vector(resize(p1 + p2, width * 2));
+    result_imag <= std_logic_vector(resize(p1 + p3, width * 2));
+
 end BHV_PIPELINED;
