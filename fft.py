@@ -2,7 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.fftpack
 
-# Real:
+num_points = 16
 
-x = [0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.010, 0.011, 0.012, 0.013, 0.014, 0.015, 0.016]
-print (np.fft.fft(x))
+x = []
+for i in range(1, num_points + 1):
+    x.append(0.0001 * i)
+
+print(x)
+
+print()
+
+print(np.fft.fft(x))

@@ -66,8 +66,8 @@ begin
 
         NEW_INNER_STAGE : entity work.base_inner_stage
             generic map(
-                rot_length => 4 * num_stage_pairs - 1,
-                ds_length  => (4 ** num_stage_pairs - 1) / 2,
+                rot_length => 4 ** num_stage_pairs,
+                ds_length  => (4 ** num_stage_pairs) / 2,
                 width      => DATA_WIDTH)
             port map(
                 clk => clk,
