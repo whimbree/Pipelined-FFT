@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.fftpack
 
-num_points = 16
+num_points = 64
 
 x = []
 for i in range(1, num_points + 1):

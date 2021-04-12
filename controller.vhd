@@ -47,7 +47,7 @@ begin
         end if;
     end process;
 
-    comb_proc : process (state, go, valid_end, size_count, output_count)
+    comb_proc : process (state, go, valid_end, size_count, output_count, size_reg, size)
     begin
 
         next_state        <= state;

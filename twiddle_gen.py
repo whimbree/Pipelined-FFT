@@ -30,10 +30,10 @@ def main():
             "subtype DATA_RANGE is natural range DATA_WIDTH - 1 downto 0;\n\n")
 
         f.write(
+            f"constant NUM_POINTS : positive := {num_points};\n\n" +
             "type TWIDDLE_ARRAY is array (natural range <>) of std_logic_vector(DATA_RANGE);\n"
             +
-            f"subtype TWIDDLE_RANGE is natural range 0 to {num_points - 1};\n\n"
-        )
+            f"subtype TWIDDLE_RANGE is natural range 0 to NUM_POINTS - 1;\n\n")
 
         # REAL TWIDDLE FACTOR GENERATION
 

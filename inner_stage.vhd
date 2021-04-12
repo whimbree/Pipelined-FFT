@@ -7,8 +7,9 @@ use work.user_pkg.all;
 entity inner_stage is
 
     generic (
-        num_stage_pairs : positive := 1;
-        width           : positive := DATA_WIDTH);
+        num_stage_pairs            : positive := 1;
+        twiddle_idx_shift_left_amt : natural  := 0;
+        width                      : positive := DATA_WIDTH);
     port (
         clk : in std_logic;
         rst : in std_logic;
@@ -34,9 +35,10 @@ begin
     BASE_CASE : if (num_stage_pairs = 1) generate
         U_BASE_INNER_STAGE : entity work.base_inner_stage
             generic map(
-                rot_length => 4,
-                ds_length  => 2,
-                width      => DATA_WIDTH)
+                rot_length                 => 4,
+                ds_length                  => 2,
+                twiddle_idx_shift_left_amt => twiddle_idx_shift_left_amt,
+                width                      => DATA_WIDTH)
             port map(
                 clk => clk,
                 rst => rst,
@@ -66,9 +68,10 @@ begin
 
         NEW_INNER_STAGE : entity work.base_inner_stage
             generic map(
-                rot_length => 4 ** num_stage_pairs,
-                ds_length  => (4 ** num_stage_pairs) / 2,
-                width      => DATA_WIDTH)
+                rot_length                 => 4 ** num_stage_pairs,
+                ds_length                  => (4 ** num_stage_pairs) / 2,
+                twiddle_idx_shift_left_amt => twiddle_idx_shift_left_amt,
+                width                      => DATA_WIDTH)
             port map(
                 clk => clk,
                 rst => rst,
@@ -95,8 +98,9 @@ begin
 
         RECURSIVE_INNER_STAGE : entity work.inner_stage
             generic map(
-                num_stage_pairs => num_stage_pairs - 1,
-                width           => DATA_WIDTH)
+                num_stage_pairs            => num_stage_pairs - 1,
+                twiddle_idx_shift_left_amt => twiddle_idx_shift_left_amt + 2,
+                width                      => DATA_WIDTH)
             port map(
                 clk => clk,
                 rst => rst,

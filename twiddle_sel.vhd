@@ -7,8 +7,9 @@ use work.user_pkg.all;
 
 entity twiddle_sel is
     generic (
-        len_sequence  : positive range 1 to 65535 := 4;
-        increment_amt : positive range 1 to 65535 := 2);
+        len_sequence       : positive range 1 to 65535 := 4;
+        increment_amt      : positive range 1 to 65535 := 2;
+        idx_shift_left_amt : natural range 0 to 65535  := 0);
     port (
         clk : in std_logic;
         rst : in std_logic;
@@ -38,7 +39,7 @@ begin
         end if;
     end process;
 
-    twiddle_real <= TWIDDLE_FACTORS_REAL(twiddle_idx);
-    twiddle_imag <= TWIDDLE_FACTORS_IMAG(twiddle_idx);
+    twiddle_real <= TWIDDLE_FACTORS_REAL(to_integer(shift_left(to_unsigned(twiddle_idx, 16), idx_shift_left_amt)));
+    twiddle_imag <= TWIDDLE_FACTORS_IMAG(to_integer(shift_left(to_unsigned(twiddle_idx, 16), idx_shift_left_amt)));
 
 end BHV;

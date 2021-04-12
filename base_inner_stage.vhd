@@ -7,9 +7,10 @@ use work.user_pkg.all;
 entity base_inner_stage is
 
     generic (
-        rot_length : positive := 4;
-        ds_length  : positive := 2;
-        width      : positive := DATA_WIDTH);
+        rot_length                 : positive := 4;
+        ds_length                  : positive := 2;
+        twiddle_idx_shift_left_amt : natural  := 0;
+        width                      : positive := DATA_WIDTH);
     port (
         clk : in std_logic;
         rst : in std_logic;
@@ -107,8 +108,9 @@ begin
 
     ts_0 : entity work.twiddle_sel
         generic map(
-            len_sequence  => rot_length,
-            increment_amt => 2)
+            len_sequence       => rot_length,
+            increment_amt      => 2,
+            idx_shift_left_amt => twiddle_idx_shift_left_amt)
         port map(
             clk => clk,
             rst => rst,
@@ -119,8 +121,9 @@ begin
 
     ts_1 : entity work.twiddle_sel
         generic map(
-            len_sequence  => rot_length,
-            increment_amt => 1)
+            len_sequence       => rot_length,
+            increment_amt      => 1,
+            idx_shift_left_amt => twiddle_idx_shift_left_amt)
         port map(
             clk => clk,
             rst => rst,
@@ -131,8 +134,9 @@ begin
 
     ts_2 : entity work.twiddle_sel
         generic map(
-            len_sequence  => rot_length,
-            increment_amt => 3)
+            len_sequence       => rot_length,
+            increment_amt      => 3,
+            idx_shift_left_amt => twiddle_idx_shift_left_amt)
         port map(
             clk => clk,
             rst => rst,

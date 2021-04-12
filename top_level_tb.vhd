@@ -13,8 +13,9 @@ end;
 
 architecture TB of top_level_tb is
 
-    constant TEST_WIDTH : positive := DATA_WIDTH;
-    constant TEST_SIZE  : positive := 4;
+    constant TEST_WIDTH               : positive := DATA_WIDTH;
+    constant NUM_INTERNAL_STAGE_PAIRS : positive := 2;
+    constant TEST_SIZE                : positive := 4 ** NUM_INTERNAL_STAGE_PAIRS;
 
     -- Clock period
     constant clk_period : time := 5 ns;
@@ -22,28 +23,28 @@ architecture TB of top_level_tb is
     constant width : positive := TEST_WIDTH;
 
     -- Ports
-    signal clk       : std_logic := '0';
-    signal rst       : std_logic;
-    signal done      : std_logic;
-    signal go        : std_logic;
-    signal size      : std_logic_vector(31 downto 0);
+    signal clk          : std_logic := '0';
+    signal rst          : std_logic;
+    signal done         : std_logic;
+    signal go           : std_logic;
+    signal size         : std_logic_vector(31 downto 0);
     signal valid_output : std_logic;
-    signal r0_input  : std_logic_vector(width - 1 downto 0);
-    signal r1_input  : std_logic_vector(width - 1 downto 0);
-    signal r2_input  : std_logic_vector(width - 1 downto 0);
-    signal r3_input  : std_logic_vector(width - 1 downto 0);
-    signal i0_input  : std_logic_vector(width - 1 downto 0);
-    signal i1_input  : std_logic_vector(width - 1 downto 0);
-    signal i2_input  : std_logic_vector(width - 1 downto 0);
-    signal i3_input  : std_logic_vector(width - 1 downto 0);
-    signal r0_output : std_logic_vector(width - 1 downto 0);
-    signal r1_output : std_logic_vector(width - 1 downto 0);
-    signal r2_output : std_logic_vector(width - 1 downto 0);
-    signal r3_output : std_logic_vector(width - 1 downto 0);
-    signal i0_output : std_logic_vector(width - 1 downto 0);
-    signal i1_output : std_logic_vector(width - 1 downto 0);
-    signal i2_output : std_logic_vector(width - 1 downto 0);
-    signal i3_output : std_logic_vector(width - 1 downto 0);
+    signal r0_input     : std_logic_vector(width - 1 downto 0);
+    signal r1_input     : std_logic_vector(width - 1 downto 0);
+    signal r2_input     : std_logic_vector(width - 1 downto 0);
+    signal r3_input     : std_logic_vector(width - 1 downto 0);
+    signal i0_input     : std_logic_vector(width - 1 downto 0);
+    signal i1_input     : std_logic_vector(width - 1 downto 0);
+    signal i2_input     : std_logic_vector(width - 1 downto 0);
+    signal i3_input     : std_logic_vector(width - 1 downto 0);
+    signal r0_output    : std_logic_vector(width - 1 downto 0);
+    signal r1_output    : std_logic_vector(width - 1 downto 0);
+    signal r2_output    : std_logic_vector(width - 1 downto 0);
+    signal r3_output    : std_logic_vector(width - 1 downto 0);
+    signal i0_output    : std_logic_vector(width - 1 downto 0);
+    signal i1_output    : std_logic_vector(width - 1 downto 0);
+    signal i2_output    : std_logic_vector(width - 1 downto 0);
+    signal i3_output    : std_logic_vector(width - 1 downto 0);
 
     signal sim_done : std_logic := '0';
 
@@ -59,46 +60,47 @@ begin
 
     top_level_inst : entity work.top_level
         generic map(
-            width => width
+            num_internal_stage_pairs => NUM_INTERNAL_STAGE_PAIRS,
+            width                    => width
         )
         port map(
-            clk       => clk,
-            rst       => rst,
-            done      => done,
-            go        => go,
-            size      => size,
+            clk          => clk,
+            rst          => rst,
+            done         => done,
+            go           => go,
+            size         => size,
             valid_output => valid_output,
-            r0_input  => r0_input,
-            r1_input  => r1_input,
-            r2_input  => r2_input,
-            r3_input  => r3_input,
-            i0_input  => i0_input,
-            i1_input  => i1_input,
-            i2_input  => i2_input,
-            i3_input  => i3_input,
-            r0_output => r0_output,
-            r1_output => r1_output,
-            r2_output => r2_output,
-            r3_output => r3_output,
-            i0_output => i0_output,
-            i1_output => i1_output,
-            i2_output => i2_output,
-            i3_output => i3_output
+            r0_input     => r0_input,
+            r1_input     => r1_input,
+            r2_input     => r2_input,
+            r3_input     => r3_input,
+            i0_input     => i0_input,
+            i1_input     => i1_input,
+            i2_input     => i2_input,
+            i3_input     => i3_input,
+            r0_output    => r0_output,
+            r1_output    => r1_output,
+            r2_output    => r2_output,
+            r3_output    => r3_output,
+            i0_output    => i0_output,
+            i1_output    => i1_output,
+            i2_output    => i2_output,
+            i3_output    => i3_output
         );
 
     test_process : process
 
         function Read_Decimal(in1 : real)
-            return std_logic_vector is 
-            begin
-                return std_logic_vector(to_signed(integer(in1 * real(2**(TEST_WIDTH-1))), TEST_WIDTH));
-            end Read_Decimal;
+            return std_logic_vector is
+        begin
+            return std_logic_vector(to_signed(integer(in1 * real(2 ** (TEST_WIDTH - 1))), TEST_WIDTH));
+        end Read_Decimal;
 
         variable read_col_from_input_buf : line; -- read lines one by one from input_buf
         variable write_col_to_output_buf : line; -- write lines one by one to output_buf
 
         variable buf_data_from_file : line; -- buffer for storind the data from input read-file
-        
+
         variable input_0_real, input_1_real, input_2_real, input_3_real : real;
         variable input_0_imag, input_1_imag, input_2_imag, input_3_imag : real;
 
@@ -183,11 +185,11 @@ begin
         r3_input <= (others => '0');
         i3_input <= (others => '0');
 
-        --wait until done = '1';
+        wait until done = '1';
 
-        for i in 0 to 25 loop
-            wait until clk'event and clk = '1';
-        end loop; -- i
+        -- for i in 0 to TEST_SIZE * 13 loop
+        --     wait until clk'event and clk = '1';
+        -- end loop; -- i
 
         go <= '0';
 
@@ -196,22 +198,22 @@ begin
         wait;
     end process;
 
-    output_process : process(clk)
+    output_process : process (clk)
 
-    function Write_Decimal(in1 : std_logic_vector)
-    return real is 
-    begin
-        return real(to_integer(signed(in1))) / real(2**(TEST_WIDTH-1));
-    end Write_Decimal;
+        function Write_Decimal(in1 : std_logic_vector)
+            return real is
+        begin
+            return real(to_integer(signed(in1))) / real(2 ** (TEST_WIDTH - 1));
+        end Write_Decimal;
 
-    variable output_0_real, output_1_real, output_2_real, output_3_real : real;
-    variable output_0_imag, output_1_imag, output_2_imag, output_3_imag : real;
+        variable output_0_real, output_1_real, output_2_real, output_3_real : real;
+        variable output_0_imag, output_1_imag, output_2_imag, output_3_imag : real;
 
-    variable fstatus : file_open_status;
+        variable fstatus : file_open_status;
 
-    variable file_line : line;
+        variable file_line : line;
 
-    variable read_char : character;
+        variable read_char : character;
 
     begin
 

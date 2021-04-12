@@ -7,7 +7,8 @@ use work.user_pkg.all;
 entity top_level is
 
     generic (
-        width : positive := DATA_WIDTH);
+        num_internal_stage_pairs : positive := 1;
+        width                    : positive := DATA_WIDTH);
     port (
         clk : in std_logic;
         rst : in std_logic;
@@ -48,7 +49,7 @@ begin
 
     datapath : entity work.datapath
         generic map(
-            num_internal_stage_pairs => 1,
+            num_internal_stage_pairs => num_internal_stage_pairs,
             width                    => width)
         port map(
             clk => clk,
