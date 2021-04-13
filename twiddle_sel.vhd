@@ -30,7 +30,8 @@ begin
             if rst = '1' then
                 twiddle_idx <= 0;
             elsif count_en = '1' then
-                if twiddle_idx = len_sequence * increment_amt then
+                -- len_sequence * increment_amt - increment_amt, since it takes a cycle to change the output of twiddle_idx
+                if twiddle_idx = len_sequence * increment_amt - increment_amt then
                     twiddle_idx <= 0;
                 else
                     twiddle_idx <= twiddle_idx + increment_amt;

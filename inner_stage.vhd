@@ -32,11 +32,12 @@ architecture STR of inner_stage is
 
 begin
 
-    BASE_CASE : if (num_stage_pairs = 1) generate
+    BASE_CASE : if num_stage_pairs = 1 generate
+
         U_BASE_INNER_STAGE : entity work.base_inner_stage
             generic map(
-                rot_length                 => 4,
-                ds_length                  => 2,
+                rot_length                 => 4 ** num_stage_pairs,
+                ds_length                  => (4 ** num_stage_pairs) / 2,
                 twiddle_idx_shift_left_amt => twiddle_idx_shift_left_amt,
                 width                      => DATA_WIDTH)
             port map(
@@ -62,9 +63,10 @@ begin
                 i1_output => i1_output,
                 i2_output => i2_output,
                 i3_output => i3_output);
+
     end generate BASE_CASE;
 
-    RECURSIVE_CASE : if (num_stage_pairs /= 1) generate
+    RECURSIVE_CASE : if num_stage_pairs /= 1 generate
 
         NEW_INNER_STAGE : entity work.base_inner_stage
             generic map(
