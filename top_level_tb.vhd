@@ -13,9 +13,8 @@ end;
 
 architecture TB of top_level_tb is
 
-    constant TEST_WIDTH               : positive := DATA_WIDTH;
-    constant NUM_INTERNAL_STAGE_PAIRS : positive := 4;
-    constant TEST_SIZE                : positive := 4 ** NUM_INTERNAL_STAGE_PAIRS;
+    constant TEST_WIDTH : positive := DATA_WIDTH;
+    constant TEST_SIZE  : positive := 4 ** NUM_INTERNAL_STAGE_PAIRS;
 
     -- Clock period
     constant clk_period : time := 5 ns;

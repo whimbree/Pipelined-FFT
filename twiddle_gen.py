@@ -13,6 +13,11 @@ def main():
     filename = "user_pkg.vhd"
 
     num_points = int(input("How many points is the FFT?: "))
+    if math.floor(math.log(num_points, 4)) != math.ceil(math.log(
+            num_points, 4)):
+        print("num_points must be a power of 4")
+        return
+
     data_width = int(input("What is the data width?: "))
 
     array_value_template = '$index => x"$value"'
@@ -22,7 +27,8 @@ def main():
 
         f.write("library ieee;\n"
                 "use ieee.std_logic_1164.all;\n"
-                "use ieee.numeric_std.all;\n\n"
+                "use ieee.numeric_std.all;\n"
+                "use ieee.math_real.all;\n\n"
                 "package user_pkg is\n\n")
 
         f.write(
@@ -30,7 +36,9 @@ def main():
             "subtype DATA_RANGE is natural range DATA_WIDTH - 1 downto 0;\n\n")
 
         f.write(
-            f"constant NUM_POINTS : positive := {num_points};\n\n" +
+            f"constant NUM_POINTS : positive := {num_points};\n" +
+            "constant NUM_INTERNAL_STAGE_PAIRS : positive := positive((log2(real(NUM_POINTS)) / log2(real(4))) - real(1));\n\n"
+            +
             "type TWIDDLE_ARRAY is array (natural range <>) of std_logic_vector(DATA_RANGE);\n"
             +
             f"subtype TWIDDLE_RANGE is natural range 0 to NUM_POINTS - 1;\n\n")

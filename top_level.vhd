@@ -7,7 +7,7 @@ use work.user_pkg.all;
 entity top_level is
 
     generic (
-        num_internal_stage_pairs : positive := 1;
+        num_internal_stage_pairs : positive := NUM_INTERNAL_STAGE_PAIRS;
         width                    : positive := DATA_WIDTH);
     port (
         clk : in std_logic;
