@@ -13,6 +13,7 @@ entity twiddle_sel is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         count_en     : in std_logic;
         twiddle_real : out std_logic_vector(DATA_RANGE);
@@ -24,12 +25,12 @@ architecture BHV of twiddle_sel is
     signal twiddle_idx : natural range 0 to len_sequence * increment_amt;
 
 begin
-    process (clk, rst)
+    process (clk)
     begin
         if rising_edge(clk) then
             if rst = '1' then
                 twiddle_idx <= 0;
-            elsif count_en = '1' then
+            elsif en = '1' and count_en = '1' then
                 -- len_sequence * increment_amt - increment_amt, since it takes a cycle to change the output of twiddle_idx
                 if twiddle_idx = len_sequence * increment_amt - increment_amt then
                     twiddle_idx <= 0;

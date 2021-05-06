@@ -7,9 +7,12 @@ entity delay is
         length : positive := 4;
         width  : positive := 8);
     port (
-        clk    : in std_logic;
-        rst    : in std_logic;
-        input  : in std_logic_vector(width - 1 downto 0);
+        clk : in std_logic;
+        rst : in std_logic;
+        en  : in std_logic;
+
+        input : in std_logic_vector(width - 1 downto 0);
+
         output : out std_logic_vector(width - 1 downto 0));
 
 end delay;
@@ -29,6 +32,7 @@ begin
             port map(
                 clk    => clk,
                 rst    => rst,
+                en     => en,
                 input  => sigs(I - 1),
                 output => sigs(I));
 

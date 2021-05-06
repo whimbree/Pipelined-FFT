@@ -14,6 +14,7 @@ entity base_inner_stage is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         input_valid  : in std_logic;
         output_valid : out std_logic;
@@ -78,6 +79,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => r0_input,
             input_0_img  => i0_input,
@@ -95,6 +97,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => r2_input,
             input_0_img  => i2_input,
@@ -114,6 +117,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             count_en     => cm_valid,
             twiddle_real => ts0_real,
@@ -127,6 +131,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             count_en     => cm_valid,
             twiddle_real => ts1_real,
@@ -140,6 +145,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             count_en     => cm_valid,
             twiddle_real => ts2_real,
@@ -148,8 +154,10 @@ begin
     cm_0 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clk        => clk,
-            rst        => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             dataa_real => b_1_0_out_1_real,
             dataa_imag => b_1_0_out_1_img,
             datab_real => ts0_real,
@@ -161,8 +169,10 @@ begin
     cm_1 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clk        => clk,
-            rst        => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             dataa_real => b_1_1_out_0_real,
             dataa_imag => b_1_1_out_0_img,
             datab_real => ts1_real,
@@ -174,8 +184,10 @@ begin
     cm_2 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clk        => clk,
-            rst        => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             dataa_real => b_1_1_out_1_real,
             dataa_imag => b_1_1_out_1_img,
             datab_real => ts2_real,
@@ -189,8 +201,10 @@ begin
             length => 3,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => b_1_0_out_0_real,
             input_img   => b_1_0_out_0_img,
             output_real => b_1_0_db_out_0_real,
@@ -199,8 +213,10 @@ begin
     ds_ctrl_0 : entity work.data_shuffler_ctrl
         generic map(pulse_length => ds_length)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_valid => ds_0_valid,
             ds_select   => ds_0_select);
 
@@ -211,6 +227,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             mux_select => ds_0_select,
 
@@ -231,6 +248,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             mux_select => ds_0_select,
 
@@ -247,32 +265,40 @@ begin
     cm_delay : entity work.delay
         generic map(width => 1, length => 1)
         port map(
-            clk       => clk,
-            rst       => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input(0)  => input_valid,
             output(0) => cm_valid);
 
     ds_0_delay : entity work.delay
         generic map(width => 1, length => 3)
         port map(
-            clk       => clk,
-            rst       => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input(0)  => cm_valid,
             output(0) => ds_0_valid);
 
     ds_1_delay : entity work.delay
         generic map(width => 1, length => ds_length + 1)
         port map(
-            clk       => clk,
-            rst       => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input(0)  => ds_0_valid,
             output(0) => ds_1_valid);
 
     output_delay : entity work.delay
         generic map(width => 1, length => (ds_length / 2) + 3)
         port map(
-            clk       => clk,
-            rst       => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input(0)  => ds_1_valid,
             output(0) => output_valid);
 
@@ -286,6 +312,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => b_1_0_ds_out_0_real,
             input_0_img  => b_1_0_ds_out_0_img,
@@ -303,6 +330,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => b_1_1_ds_out_0_real,
             input_0_img  => b_1_1_ds_out_0_img,
@@ -317,8 +345,10 @@ begin
     ds_ctrl_1 : entity work.data_shuffler_ctrl
         generic map(pulse_length => ds_length / 2)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_valid => ds_1_valid,
             ds_select   => ds_1_select);
 
@@ -329,6 +359,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             mux_select => ds_1_select,
 
@@ -349,6 +380,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             mux_select => ds_1_select,
 
@@ -365,8 +397,10 @@ begin
     tm_1 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clk        => clk,
-            rst        => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             dataa_real => b_2_1_ds_out_1_real,
             dataa_imag => b_2_1_ds_out_1_img,
             datab_real => ZERO,
@@ -383,8 +417,10 @@ begin
             length => 3,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => b_2_0_ds_out_0_real,
             input_img   => b_2_0_ds_out_0_img,
             output_real => r0_output,
@@ -395,8 +431,10 @@ begin
             length => 3,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => b_2_0_ds_out_1_real,
             input_img   => b_2_0_ds_out_1_img,
             output_real => r1_output,
@@ -407,8 +445,10 @@ begin
             length => 3,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => b_2_1_ds_out_0_real,
             input_img   => b_2_1_ds_out_0_img,
             output_real => r2_output,

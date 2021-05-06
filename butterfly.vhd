@@ -9,6 +9,7 @@ entity butterfly is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         input_0_real : in std_logic_vector(width - 1 downto 0);
         input_0_img  : in std_logic_vector(width - 1 downto 0);
@@ -35,6 +36,7 @@ begin
         port map(
             clk         => clk,
             rst         => rst,
+            en          => en,
             input_real  => input_0_real,
             input_img   => input_0_img,
             output_real => reg_0_real,
@@ -45,6 +47,7 @@ begin
         port map(
             clk         => clk,
             rst         => rst,
+            en          => en,
             input_real  => input_1_real,
             input_img   => input_1_img,
             output_real => reg_1_real,

@@ -24,9 +24,11 @@ architecture TB of top_level_tb is
     -- Ports
     signal clk          : std_logic := '0';
     signal rst          : std_logic;
+    signal en           : std_logic := '1';
     signal done         : std_logic;
     signal go           : std_logic;
     signal size         : std_logic_vector(31 downto 0);
+    signal valid_input  : std_logic;
     signal valid_output : std_logic;
     signal r0_input     : std_logic_vector(width - 1 downto 0);
     signal r1_input     : std_logic_vector(width - 1 downto 0);
@@ -65,9 +67,11 @@ begin
         port map(
             clk          => clk,
             rst          => rst,
+            en           => en,
             done         => done,
             go           => go,
             size         => size,
+            valid_input  => valid_input,
             valid_output => valid_output,
             r0_input     => r0_input,
             r1_input     => r1_input,
@@ -142,6 +146,8 @@ begin
             wait until rising_edge(clk);
             readline(fptr, file_line);
 
+            valid_input <= '1';
+
             read(file_line, input_0_real);
             r0_input <= Read_Decimal(input_0_real);
             read(file_line, read_char);
@@ -175,6 +181,9 @@ begin
 
         end loop;
 
+        wait until rising_edge(clk);
+        valid_input <= '0';
+
         file_close(fptr);
 
         -- reopen the file to get back to the top
@@ -193,9 +202,11 @@ begin
 
         size <= std_logic_vector(to_unsigned(TEST_SIZE, 32));
         go   <= '1';
+        wait until rising_edge(clk);
 
-        for i in 1 to TEST_SIZE loop
-            wait until rising_edge(clk);
+        -- populate the first half of the pipeline
+
+        for i in 1 to TEST_SIZE / 2 loop
             readline(fptr, file_line);
 
             read(file_line, input_0_real);
@@ -229,24 +240,59 @@ begin
             read(file_line, input_3_imag);
             i3_input <= Read_Decimal(input_3_imag);
 
+            valid_input <= '1';
+            wait until rising_edge(clk);
         end loop;
 
-        wait until rising_edge(clk);
+        -- stall for a bit in the middle
 
-        r0_input <= (others => '0');
-        i0_input <= (others => '0');
-        r1_input <= (others => '0');
-        i1_input <= (others => '0');
-        r2_input <= (others => '0');
-        i2_input <= (others => '0');
-        r3_input <= (others => '0');
-        i3_input <= (others => '0');
+        for i in 1 to 25 loop
+            en <= '0';
+            wait until rising_edge(clk);
+        end loop;
+        en <= '1';
+
+        -- populate the second half of the pipeline
+
+        for i in TEST_SIZE / 2 + 1 to TEST_SIZE loop
+            readline(fptr, file_line);
+
+            read(file_line, input_0_real);
+            r0_input <= Read_Decimal(input_0_real);
+            read(file_line, read_char);
+
+            read(file_line, input_0_imag);
+            i0_input <= Read_Decimal(input_0_imag);
+            read(file_line, read_char);
+
+            read(file_line, input_1_real);
+            r1_input <= Read_Decimal(input_1_real);
+            read(file_line, read_char);
+
+            read(file_line, input_1_imag);
+            i1_input <= Read_Decimal(input_1_imag);
+            read(file_line, read_char);
+
+            read(file_line, input_2_real);
+            r2_input <= Read_Decimal(input_2_real);
+            read(file_line, read_char);
+
+            read(file_line, input_2_imag);
+            i2_input <= Read_Decimal(input_2_imag);
+            read(file_line, read_char);
+
+            read(file_line, input_3_real);
+            r3_input <= Read_Decimal(input_3_real);
+            read(file_line, read_char);
+
+            read(file_line, input_3_imag);
+            i3_input <= Read_Decimal(input_3_imag);
+
+            valid_input <= '1';
+            wait until rising_edge(clk);
+        end loop;
 
         wait until done = '1';
-
-        -- for i in 0 to TEST_SIZE * 13 loop
-        --     wait until clk'event and clk = '1';
-        -- end loop; -- i
 
         go <= '0';
 

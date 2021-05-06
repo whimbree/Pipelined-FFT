@@ -19,6 +19,7 @@ architecture TB of complex_mult_tb is
     -- Ports
     signal clk         : std_logic := '0';
     signal rst         : std_logic := '0';
+    signal en          : std_logic := '1';
     signal dataa_real  : std_logic_vector(width - 1 downto 0);
     signal dataa_imag  : std_logic_vector(width - 1 downto 0);
     signal datab_real  : std_logic_vector(width - 1 downto 0);
@@ -41,6 +42,7 @@ begin
         port map(
             clk         => clk,
             rst         => rst,
+            en          => en,
             dataa_real  => dataa_real,
             dataa_imag  => dataa_imag,
             datab_real  => datab_real,

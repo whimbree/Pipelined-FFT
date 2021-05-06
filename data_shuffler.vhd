@@ -10,6 +10,7 @@ entity data_shuffler is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         mux_select : in std_logic;
 
@@ -68,8 +69,10 @@ begin
             length => delay_length,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => input_1_real,
             input_img   => input_1_img,
             output_real => dbuff_real,
@@ -81,8 +84,10 @@ begin
             length => delay_length,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => mux_real,
             input_img   => mux_img,
             output_real => output_0_real,

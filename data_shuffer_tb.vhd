@@ -16,6 +16,7 @@ architecture TB of data_shuffler_tb is
     -- Ports
     signal clk           : std_logic := '0';
     signal rst           : std_logic;
+    signal en            : std_logic := '1';
     signal mux_select    : std_logic;
     signal input_0_real  : std_logic_vector(width - 1 downto 0);
     signal input_0_img   : std_logic_vector(width - 1 downto 0);
@@ -42,6 +43,7 @@ begin
         port map(
             clk           => clk,
             rst           => rst,
+            en            => en,
             mux_select    => mux_select,
             input_0_real  => input_0_real,
             input_0_img   => input_0_img,

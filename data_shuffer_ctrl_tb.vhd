@@ -15,6 +15,7 @@ architecture TB of data_shuffler_ctrl_tb is
     -- Ports
     signal clk         : std_logic := '0';
     signal rst         : std_logic;
+    signal en          : std_logic := '1';
     signal input_valid : std_logic;
     signal ds_select   : std_logic;
 
@@ -32,6 +33,7 @@ begin
         port map(
             clk         => clk,
             rst         => rst,
+            en          => en,
             input_valid => input_valid,
             ds_select   => ds_select);
 

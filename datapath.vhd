@@ -24,6 +24,7 @@ entity datapath is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         input_valid  : in std_logic;
         output_valid : out std_logic;
@@ -54,6 +55,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_valid  => input_valid,
             output_valid => first_stage_output_valid,
@@ -83,6 +85,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_valid  => first_stage_output_valid,
             output_valid => inner_stage_output_valid,
@@ -111,6 +114,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_valid  => inner_stage_output_valid,
             output_valid => output_valid,

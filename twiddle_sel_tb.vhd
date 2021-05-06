@@ -25,6 +25,7 @@ architecture TB of twiddle_sel_tb is
     -- Ports
     signal clk                        : std_logic := '0';
     signal rst                        : std_logic;
+    signal en                         : std_logic := '1';
     signal count_en                   : std_logic;
     signal twiddle_real, twiddle_imag : std_logic_vector(DATA_RANGE);
 
@@ -56,6 +57,7 @@ begin
         port map(
             clk          => clk,
             rst          => rst,
+            en           => en,
             count_en     => count_en,
             twiddle_real => twiddle_real,
             twiddle_imag => twiddle_imag);

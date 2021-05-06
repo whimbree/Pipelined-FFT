@@ -11,6 +11,7 @@ entity last_stage is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         input_valid  : in std_logic;
         output_valid : out std_logic;
@@ -32,6 +33,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => r0_input,
             input_0_img  => i0_input,
@@ -49,6 +51,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => r2_input,
             input_0_img  => i2_input,
@@ -63,8 +66,10 @@ begin
     stage_delay : entity work.delay
         generic map(width => 1, length => 1)
         port map(
-            clk       => clk,
-            rst       => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input(0)  => input_valid,
             output(0) => output_valid);
 

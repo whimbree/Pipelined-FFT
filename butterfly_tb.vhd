@@ -17,6 +17,7 @@ architecture TB of butterfly_tb is
     -- Ports
     signal clk           : std_logic := '0';
     signal rst           : std_logic;
+    signal en            : std_logic := '1';
     signal input_0_real  : std_logic_vector(width - 1 downto 0);
     signal input_0_img   : std_logic_vector(width - 1 downto 0);
     signal input_1_real  : std_logic_vector(width - 1 downto 0);
@@ -43,6 +44,7 @@ begin
         port map(
             clk           => clk,
             rst           => rst,
+            en            => en,
             input_0_real  => input_0_real,
             input_0_img   => input_0_img,
             input_1_real  => input_1_real,

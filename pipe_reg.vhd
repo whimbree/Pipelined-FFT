@@ -7,10 +7,13 @@ entity pipe_reg is
         length : positive := 4;
         width  : positive := 8);
     port (
-        clk         : in std_logic;
-        rst         : in std_logic;
-        input_real  : in std_logic_vector(width - 1 downto 0);
-        input_img   : in std_logic_vector(width - 1 downto 0);
+        clk : in std_logic;
+        rst : in std_logic;
+        en  : in std_logic;
+
+        input_real : in std_logic_vector(width - 1 downto 0);
+        input_img  : in std_logic_vector(width - 1 downto 0);
+
         output_real : out std_logic_vector(width - 1 downto 0);
         output_img  : out std_logic_vector(width - 1 downto 0));
 
@@ -32,6 +35,7 @@ begin
             port map(
                 clk         => clk,
                 rst         => rst,
+                en          => en,
                 input_real  => real_sigs(I - 1),
                 input_img   => img_sigs(I - 1),
                 output_real => real_sigs(I),

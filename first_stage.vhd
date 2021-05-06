@@ -11,6 +11,7 @@ entity first_stage is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         input_valid  : in std_logic;
         output_valid : out std_logic;
@@ -41,6 +42,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => r0_input,
             input_0_img  => i0_input,
@@ -58,6 +60,7 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             input_0_real => r2_input,
             input_0_img  => i2_input,
@@ -72,8 +75,10 @@ begin
     tm_0 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clk        => clk,
-            rst        => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             dataa_real => b_0_1_out_1_real,
             dataa_imag => b_0_1_out_1_img,
             datab_real => ZERO,
@@ -90,8 +95,10 @@ begin
             length => 3,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => b_0_0_out_0_real,
             input_img   => b_0_0_out_0_img,
             output_real => r0_output,
@@ -102,8 +109,10 @@ begin
             length => 3,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => b_0_0_out_1_real,
             input_img   => b_0_0_out_1_img,
             output_real => r2_output,
@@ -114,8 +123,10 @@ begin
             length => 3,
             width  => width)
         port map(
-            clk         => clk,
-            rst         => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input_real  => b_0_1_out_0_real,
             input_img   => b_0_1_out_0_img,
             output_real => r1_output,
@@ -124,8 +135,10 @@ begin
     stage_delay : entity work.delay
         generic map(width => 1, length => 4)
         port map(
-            clk       => clk,
-            rst       => rst,
+            clk => clk,
+            rst => rst,
+            en  => en,
+
             input(0)  => input_valid,
             output(0) => output_valid);
 

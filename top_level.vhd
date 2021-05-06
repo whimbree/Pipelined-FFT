@@ -12,11 +12,13 @@ entity top_level is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         done : out std_logic;
         go   : in std_logic;
         size : in std_logic_vector(31 downto 0);
 
+        valid_input  : in std_logic;
         valid_output : out std_logic;
 
         r0_input, r1_input, r2_input, r3_input     : in std_logic_vector(width - 1 downto 0);
@@ -28,24 +30,25 @@ end top_level;
 
 architecture STR of top_level is
 
-    signal input_valid, output_valid : std_logic;
+    signal valid_output_wire : std_logic;
 
 begin
 
-    valid_output <= output_valid;
+    valid_output <= valid_output_wire;
 
     controller : entity work.controller
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
             go   => go,
             size => size,
             done => done,
 
-            valid_start => input_valid,
+            input_valid => valid_input,
 
-            valid_end => output_valid);
+            output_valid => valid_output_wire);
 
     datapath : entity work.datapath
         generic map(
@@ -54,9 +57,10 @@ begin
         port map(
             clk => clk,
             rst => rst,
+            en  => en,
 
-            input_valid  => input_valid,
-            output_valid => output_valid,
+            input_valid  => valid_input,
+            output_valid => valid_output_wire,
 
             r0_input => r0_input,
             i0_input => i0_input,

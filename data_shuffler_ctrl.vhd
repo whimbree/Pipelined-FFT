@@ -4,8 +4,10 @@ use ieee.std_logic_1164.all;
 entity data_shuffler_ctrl is
     generic (pulse_length : positive := 2);
     port (
-        clk         : in std_logic;
-        rst         : in std_logic;
+        clk : in std_logic;
+        rst : in std_logic;
+        en  : in std_logic;
+
         input_valid : in std_logic;
 
         ds_select : out std_logic);
@@ -18,19 +20,21 @@ architecture BHV of data_shuffler_ctrl is
 
 begin
 
-    process (clk, rst)
+    process (clk)
     begin
-        if rst = '1' then
-            count              <= 0;
-            ds_select_internal <= '0';
-        elsif rising_edge(clk) then
-            if input_valid = '1' then
-                if count = pulse_length - 1 then
-                    -- pulse_length - 1, since it takes a cycle to change the output of the ds_select register
-                    count              <= 0;
-                    ds_select_internal <= not ds_select_internal;
-                else
-                    count <= count + 1;
+        if rising_edge(clk) then
+            if rst = '1' then
+                count              <= 0;
+                ds_select_internal <= '0';
+            elsif en = '1' then
+                if input_valid = '1' then
+                    if count = pulse_length - 1 then
+                        -- pulse_length - 1, since it takes a cycle to change the output of the ds_select register
+                        count              <= 0;
+                        ds_select_internal <= not ds_select_internal;
+                    else
+                        count <= count + 1;
+                    end if;
                 end if;
             end if;
         end if;

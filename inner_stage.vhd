@@ -13,6 +13,7 @@ entity inner_stage is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en  : in std_logic;
 
         input_valid  : in std_logic;
         output_valid : out std_logic;
@@ -43,6 +44,7 @@ begin
             port map(
                 clk => clk,
                 rst => rst,
+                en  => en,
 
                 input_valid  => input_valid,
                 output_valid => output_valid,
@@ -77,6 +79,7 @@ begin
             port map(
                 clk => clk,
                 rst => rst,
+                en  => en,
 
                 input_valid  => input_valid,
                 output_valid => front_stage_output_valid,
@@ -106,6 +109,7 @@ begin
             port map(
                 clk => clk,
                 rst => rst,
+                en  => en,
 
                 input_valid  => front_stage_output_valid,
                 output_valid => output_valid,
