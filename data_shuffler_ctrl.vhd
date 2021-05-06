@@ -14,16 +14,17 @@ end data_shuffler_ctrl;
 architecture BHV of data_shuffler_ctrl is
 
     signal count              : natural range 0 to pulse_length - 1;
-    signal ds_select_internal : std_logic := '0';
+    signal ds_select_internal : std_logic;
 
 begin
 
     process (clk, rst)
     begin
-        if rising_edge(clk) then
-            if rst = '1' then
-                count <= 0;
-            elsif input_valid = '1' then
+        if rst = '1' then
+            count              <= 0;
+            ds_select_internal <= '0';
+        elsif rising_edge(clk) then
+            if input_valid = '1' then
                 if count = pulse_length - 1 then
                     -- pulse_length - 1, since it takes a cycle to change the output of the ds_select register
                     count              <= 0;

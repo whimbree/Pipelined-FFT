@@ -148,7 +148,8 @@ begin
     cm_0 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clock      => clk,
+            clk        => clk,
+            rst        => rst,
             dataa_real => b_1_0_out_1_real,
             dataa_imag => b_1_0_out_1_img,
             datab_real => ts0_real,
@@ -160,7 +161,8 @@ begin
     cm_1 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clock      => clk,
+            clk        => clk,
+            rst        => rst,
             dataa_real => b_1_1_out_0_real,
             dataa_imag => b_1_1_out_0_img,
             datab_real => ts1_real,
@@ -168,10 +170,12 @@ begin
 
             result_real => b_1_1_cm_out_0_real_2x,
             result_imag => b_1_1_cm_out_0_img_2x);
+
     cm_2 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clock      => clk,
+            clk        => clk,
+            rst        => rst,
             dataa_real => b_1_1_out_1_real,
             dataa_imag => b_1_1_out_1_img,
             datab_real => ts2_real,
@@ -361,7 +365,8 @@ begin
     tm_1 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clock      => clk,
+            clk        => clk,
+            rst        => rst,
             dataa_real => b_2_1_ds_out_1_real,
             dataa_imag => b_2_1_ds_out_1_img,
             datab_real => ZERO,

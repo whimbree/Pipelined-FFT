@@ -7,7 +7,8 @@ entity complex_mult is
     generic (
         width : positive := 32);
     port (
-        clock      : in std_logic;
+        clk        : in std_logic;
+        rst        : in std_logic;
         dataa_real : in std_logic_vector(width - 1 downto 0);
         dataa_imag : in std_logic_vector(width - 1 downto 0);
         datab_real : in std_logic_vector(width - 1 downto 0);
@@ -23,9 +24,23 @@ architecture BHV_PIPELINED of complex_mult is
     signal a1, a2, a3                         : signed(width downto 0);
     signal p1, p2, p3                         : signed((width * 2) downto 0);
 begin
-    process (clock)
+    process (clk, rst)
     begin
-        if rising_edge(clock) then
+        if rst = '1' then
+            x_r_reg   <= (others => '0');
+            x_i_reg   <= (others => '0');
+            y_r_reg   <= (others => '0');
+            y_i_reg   <= (others => '0');
+            x_r_reg_d <= (others => '0');
+            x_i_reg_d <= (others => '0');
+            y_i_reg_d <= (others => '0');
+            a1        <= (others => '0');
+            a2        <= (others => '0');
+            a3        <= (others => '0');
+            p1        <= (others => '0');
+            p2        <= (others => '0');
+            p3        <= (others => '0');
+        elsif rising_edge(clk) then
             --stage 1
             x_r_reg <= signed(dataa_real);
             x_i_reg <= signed(dataa_imag);

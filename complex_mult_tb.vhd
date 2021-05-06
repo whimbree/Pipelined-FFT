@@ -18,6 +18,7 @@ architecture TB of complex_mult_tb is
 
     -- Ports
     signal clk         : std_logic := '0';
+    signal rst         : std_logic := '0';
     signal dataa_real  : std_logic_vector(width - 1 downto 0);
     signal dataa_imag  : std_logic_vector(width - 1 downto 0);
     signal datab_real  : std_logic_vector(width - 1 downto 0);
@@ -38,7 +39,8 @@ begin
             width => width
         )
         port map(
-            clock       => clk,
+            clk         => clk,
+            rst         => rst,
             dataa_real  => dataa_real,
             dataa_imag  => dataa_imag,
             datab_real  => datab_real,
@@ -94,12 +96,10 @@ begin
         end loop; -- i
 
         expected_real := (0);
-        expected_imag := -4325376;
+        expected_imag := - 4325376;
 
         assert result_real = std_logic_vector(to_signed(expected_real, result_real'length)) report "unexpected value. expected_real = " & integer'image(expected_real) & ", result_real = " & integer'image(to_integer(signed(result_real)));
         assert result_imag = std_logic_vector(to_signed(expected_imag, result_imag'length)) report "unexpected value. expected_imag = " & integer'image(expected_imag) & ", result_imag = " & integer'image(to_integer(signed(result_imag)));
-
-
         sim_done <= '1';
         report "SIMULATION FINISHED!!!";
 

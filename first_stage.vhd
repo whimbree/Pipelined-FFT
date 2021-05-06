@@ -72,7 +72,8 @@ begin
     tm_0 : entity work.complex_mult(BHV_PIPELINED)
         generic map(width => width)
         port map(
-            clock      => clk,
+            clk        => clk,
+            rst        => rst,
             dataa_real => b_0_1_out_1_real,
             dataa_imag => b_0_1_out_1_img,
             datab_real => ZERO,

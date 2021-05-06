@@ -135,6 +135,65 @@ begin
         size <= std_logic_vector(to_unsigned(TEST_SIZE, 32));
         go   <= '1';
 
+        -- fill 2/3s of the pipeline, then
+        -- reset and start filling from the beginning
+        -- test for proper resetting
+        for i in 1 to (2 * TEST_SIZE) / 3 loop
+            wait until rising_edge(clk);
+            readline(fptr, file_line);
+
+            read(file_line, input_0_real);
+            r0_input <= Read_Decimal(input_0_real);
+            read(file_line, read_char);
+
+            read(file_line, input_0_imag);
+            i0_input <= Read_Decimal(input_0_imag);
+            read(file_line, read_char);
+
+            read(file_line, input_1_real);
+            r1_input <= Read_Decimal(input_1_real);
+            read(file_line, read_char);
+
+            read(file_line, input_1_imag);
+            i1_input <= Read_Decimal(input_1_imag);
+            read(file_line, read_char);
+
+            read(file_line, input_2_real);
+            r2_input <= Read_Decimal(input_2_real);
+            read(file_line, read_char);
+
+            read(file_line, input_2_imag);
+            i2_input <= Read_Decimal(input_2_imag);
+            read(file_line, read_char);
+
+            read(file_line, input_3_real);
+            r3_input <= Read_Decimal(input_3_real);
+            read(file_line, read_char);
+
+            read(file_line, input_3_imag);
+            i3_input <= Read_Decimal(input_3_imag);
+
+        end loop;
+
+        file_close(fptr);
+
+        -- reopen the file to get back to the top
+        file_open(fstatus, fptr, C_FILE_NAME_INPUT, read_mode);
+
+        rst  <= '1';
+        size <= (others => '0');
+        go   <= '0';
+
+        for i in 0 to 4 loop
+            wait until rising_edge(clk);
+        end loop; -- i
+
+        rst <= '0';
+        wait until rising_edge(clk);
+
+        size <= std_logic_vector(to_unsigned(TEST_SIZE, 32));
+        go   <= '1';
+
         for i in 1 to TEST_SIZE loop
             wait until rising_edge(clk);
             readline(fptr, file_line);
@@ -169,7 +228,6 @@ begin
 
             read(file_line, input_3_imag);
             i3_input <= Read_Decimal(input_3_imag);
-            read(file_line, read_char);
 
         end loop;
 
