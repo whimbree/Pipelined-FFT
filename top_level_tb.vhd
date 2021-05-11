@@ -25,10 +25,10 @@ architecture TB of top_level_tb is
     signal clk          : std_logic := '0';
     signal rst          : std_logic;
     signal en           : std_logic := '1';
+    signal valid_input  : std_logic;
     signal done         : std_logic;
     signal go           : std_logic;
     signal size         : std_logic_vector(31 downto 0);
-    signal valid_input  : std_logic;
     signal valid_output : std_logic;
     signal r0_input     : std_logic_vector(width - 1 downto 0);
     signal r1_input     : std_logic_vector(width - 1 downto 0);
@@ -93,19 +93,13 @@ begin
 
     test_process : process
 
-        function Read_Decimal(in1 : real)
-            return std_logic_vector is
-        begin
-            return std_logic_vector(to_signed(integer(in1 * real(2 ** (TEST_WIDTH - 1))), TEST_WIDTH));
-        end Read_Decimal;
-
         variable read_col_from_input_buf : line; -- read lines one by one from input_buf
         variable write_col_to_output_buf : line; -- write lines one by one to output_buf
 
         variable buf_data_from_file : line; -- buffer for storind the data from input read-file
 
-        variable input_0_real, input_1_real, input_2_real, input_3_real : real;
-        variable input_0_imag, input_1_imag, input_2_imag, input_3_imag : real;
+        variable input_0_real, input_1_real, input_2_real, input_3_real : std_logic_vector(width - 1 downto 0);
+        variable input_0_imag, input_1_imag, input_2_imag, input_3_imag : std_logic_vector(width - 1 downto 0);
 
         variable fstatus : file_open_status;
 
@@ -119,15 +113,6 @@ begin
         rst  <= '1';
         size <= (others => '0');
         go   <= '0';
-
-        r0_input <= (others => '0');
-        i0_input <= (others => '0');
-        r1_input <= (others => '0');
-        i1_input <= (others => '0');
-        r2_input <= (others => '0');
-        i2_input <= (others => '0');
-        r3_input <= (others => '0');
-        i3_input <= (others => '0');
 
         for i in 0 to 4 loop
             wait until rising_edge(clk);
@@ -143,46 +128,46 @@ begin
         -- reset and start filling from the beginning
         -- test for proper resetting
         for i in 1 to (2 * TEST_SIZE) / 3 loop
-            wait until rising_edge(clk);
             readline(fptr, file_line);
+
+            hread(file_line, input_0_real);
+            r0_input <= input_0_real;
+            read(file_line, read_char);
+
+            hread(file_line, input_0_imag);
+            i0_input <= input_0_imag;
+            read(file_line, read_char);
+
+            hread(file_line, input_1_real);
+            r1_input <= input_1_real;
+            read(file_line, read_char);
+
+            hread(file_line, input_1_imag);
+            i1_input <= input_1_imag;
+            read(file_line, read_char);
+
+            hread(file_line, input_2_real);
+            r2_input <= input_2_real;
+            read(file_line, read_char);
+
+            hread(file_line, input_2_imag);
+            i2_input <= input_2_imag;
+            read(file_line, read_char);
+
+            hread(file_line, input_3_real);
+            r3_input <= input_3_real;
+            read(file_line, read_char);
+
+            hread(file_line, input_3_imag);
+            i3_input <= input_3_imag;
 
             valid_input <= '1';
 
-            read(file_line, input_0_real);
-            r0_input <= Read_Decimal(input_0_real);
-            read(file_line, read_char);
-
-            read(file_line, input_0_imag);
-            i0_input <= Read_Decimal(input_0_imag);
-            read(file_line, read_char);
-
-            read(file_line, input_1_real);
-            r1_input <= Read_Decimal(input_1_real);
-            read(file_line, read_char);
-
-            read(file_line, input_1_imag);
-            i1_input <= Read_Decimal(input_1_imag);
-            read(file_line, read_char);
-
-            read(file_line, input_2_real);
-            r2_input <= Read_Decimal(input_2_real);
-            read(file_line, read_char);
-
-            read(file_line, input_2_imag);
-            i2_input <= Read_Decimal(input_2_imag);
-            read(file_line, read_char);
-
-            read(file_line, input_3_real);
-            r3_input <= Read_Decimal(input_3_real);
-            read(file_line, read_char);
-
-            read(file_line, input_3_imag);
-            i3_input <= Read_Decimal(input_3_imag);
-
+            wait until rising_edge(clk);
         end loop;
 
-        wait until rising_edge(clk);
         valid_input <= '0';
+        wait until rising_edge(clk);
 
         file_close(fptr);
 
@@ -209,38 +194,39 @@ begin
         for i in 1 to TEST_SIZE / 2 loop
             readline(fptr, file_line);
 
-            read(file_line, input_0_real);
-            r0_input <= Read_Decimal(input_0_real);
+            hread(file_line, input_0_real);
+            r0_input <= input_0_real;
             read(file_line, read_char);
 
-            read(file_line, input_0_imag);
-            i0_input <= Read_Decimal(input_0_imag);
+            hread(file_line, input_0_imag);
+            i0_input <= input_0_imag;
             read(file_line, read_char);
 
-            read(file_line, input_1_real);
-            r1_input <= Read_Decimal(input_1_real);
+            hread(file_line, input_1_real);
+            r1_input <= input_1_real;
             read(file_line, read_char);
 
-            read(file_line, input_1_imag);
-            i1_input <= Read_Decimal(input_1_imag);
+            hread(file_line, input_1_imag);
+            i1_input <= input_1_imag;
             read(file_line, read_char);
 
-            read(file_line, input_2_real);
-            r2_input <= Read_Decimal(input_2_real);
+            hread(file_line, input_2_real);
+            r2_input <= input_2_real;
             read(file_line, read_char);
 
-            read(file_line, input_2_imag);
-            i2_input <= Read_Decimal(input_2_imag);
+            hread(file_line, input_2_imag);
+            i2_input <= input_2_imag;
             read(file_line, read_char);
 
-            read(file_line, input_3_real);
-            r3_input <= Read_Decimal(input_3_real);
+            hread(file_line, input_3_real);
+            r3_input <= input_3_real;
             read(file_line, read_char);
 
-            read(file_line, input_3_imag);
-            i3_input <= Read_Decimal(input_3_imag);
+            hread(file_line, input_3_imag);
+            i3_input <= input_3_imag;
 
             valid_input <= '1';
+
             wait until rising_edge(clk);
         end loop;
 
@@ -257,38 +243,39 @@ begin
         for i in TEST_SIZE / 2 + 1 to TEST_SIZE loop
             readline(fptr, file_line);
 
-            read(file_line, input_0_real);
-            r0_input <= Read_Decimal(input_0_real);
+            hread(file_line, input_0_real);
+            r0_input <= input_0_real;
             read(file_line, read_char);
 
-            read(file_line, input_0_imag);
-            i0_input <= Read_Decimal(input_0_imag);
+            hread(file_line, input_0_imag);
+            i0_input <= input_0_imag;
             read(file_line, read_char);
 
-            read(file_line, input_1_real);
-            r1_input <= Read_Decimal(input_1_real);
+            hread(file_line, input_1_real);
+            r1_input <= input_1_real;
             read(file_line, read_char);
 
-            read(file_line, input_1_imag);
-            i1_input <= Read_Decimal(input_1_imag);
+            hread(file_line, input_1_imag);
+            i1_input <= input_1_imag;
             read(file_line, read_char);
 
-            read(file_line, input_2_real);
-            r2_input <= Read_Decimal(input_2_real);
+            hread(file_line, input_2_real);
+            r2_input <= input_2_real;
             read(file_line, read_char);
 
-            read(file_line, input_2_imag);
-            i2_input <= Read_Decimal(input_2_imag);
+            hread(file_line, input_2_imag);
+            i2_input <= input_2_imag;
             read(file_line, read_char);
 
-            read(file_line, input_3_real);
-            r3_input <= Read_Decimal(input_3_real);
+            hread(file_line, input_3_real);
+            r3_input <= input_3_real;
             read(file_line, read_char);
 
-            read(file_line, input_3_imag);
-            i3_input <= Read_Decimal(input_3_imag);
+            hread(file_line, input_3_imag);
+            i3_input <= input_3_imag;
 
             valid_input <= '1';
+
             wait until rising_edge(clk);
         end loop;
 
@@ -303,51 +290,41 @@ begin
 
     output_process : process (clk)
 
-        function Write_Decimal(in1 : std_logic_vector)
-            return real is
+        -- http://edaplaygroundblog.blogspot.com/2018/10/how-to-convert-stdlogicvector-to-hex.html
+        function to_hstring (SLV : std_logic_vector) return string is
+            variable L               : LINE;
         begin
-            return real(to_integer(signed(in1))) / real(2 ** (TEST_WIDTH - 1));
-        end Write_Decimal;
+            hwrite(L, SLV);
+            return L.all;
+        end function to_hstring;
 
-        variable output_0_real, output_1_real, output_2_real, output_3_real : real;
-        variable output_0_imag, output_1_imag, output_2_imag, output_3_imag : real;
+        constant CSV_DELIM : string := ",";
 
         variable fstatus : file_open_status;
 
         variable file_line : line;
-
-        variable read_char : character;
-
     begin
 
         file_open(fstatus, fptr_out, C_FILE_NAME_OUTPUT, write_mode);
 
-        if (sim_done = '0') then
+        if sim_done = '0' then
 
-            if (valid_output = '1' and rising_edge(clk)) then
-                output_0_real := Write_Decimal(r0_output);
-                write(file_line, output_0_real);
-                write(file_line, string'(", "));
-                output_0_real := Write_Decimal(i0_output);
-                write(file_line, output_0_real);
-                write(file_line, string'(", "));
-                output_0_real := Write_Decimal(r1_output);
-                write(file_line, output_0_real);
-                write(file_line, string'(", "));
-                output_0_real := Write_Decimal(i1_output);
-                write(file_line, output_0_real);
-                write(file_line, string'(", "));
-                output_0_real := Write_Decimal(r2_output);
-                write(file_line, output_0_real);
-                write(file_line, string'(", "));
-                output_0_real := Write_Decimal(i2_output);
-                write(file_line, output_0_real);
-                write(file_line, string'(", "));
-                output_0_real := Write_Decimal(r3_output);
-                write(file_line, output_0_real);
-                write(file_line, string'(", "));
-                output_0_real := Write_Decimal(i3_output);
-                write(file_line, output_0_real);
+            if valid_output = '1' and rising_edge(clk) then
+                write(file_line, to_hstring(r0_output));
+                write(file_line, CSV_DELIM);
+                write(file_line, to_hstring(i0_output));
+                write(file_line, CSV_DELIM);
+                write(file_line, to_hstring(r1_output));
+                write(file_line, CSV_DELIM);
+                write(file_line, to_hstring(i1_output));
+                write(file_line, CSV_DELIM);
+                write(file_line, to_hstring(r2_output));
+                write(file_line, CSV_DELIM);
+                write(file_line, to_hstring(i2_output));
+                write(file_line, CSV_DELIM);
+                write(file_line, to_hstring(r3_output));
+                write(file_line, CSV_DELIM);
+                write(file_line, to_hstring(i3_output));
 
                 writeline(fptr_out, file_line);
             end if;

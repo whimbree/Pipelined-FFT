@@ -9,8 +9,12 @@
 # Absolute paths to testbench csv files
 tb_files_pkg.vhd
 
-# python
+# Python
 **/__pycache__
 
-# modelsim
+# Modelsim
 **/simulation/modelsim
+
+# VS Code
+**/.vscode
+**/settings.json
